@@ -7,10 +7,13 @@ sqSubsonicDesktop
 支持全局快捷键和其他播放器也没啥区别了
 
 运行图：
-
-
-
-
+![6.png](image%2F6.png)
+![1.png](image%2F1.png)
+![2.png](image%2F2.png)
+![3.png](image%2F3.png)
+![4.png](image%2F4.png)
+![5.png](image%2F5.png)
+![7.png](image%2F7.png)
 使用的右侧下载安装好的
 
 
