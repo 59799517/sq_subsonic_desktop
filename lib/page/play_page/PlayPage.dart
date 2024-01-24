@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:sq_subsonic_desktop/color/SqThemeData.dart';
 import 'package:sq_subsonic_desktop/page/controller/ServiceController.dart';
 import 'package:flutter_lyric/lyrics_reader.dart';
 import 'package:sq_subsonic_desktop/page/play_page/lyric/SqLyricUI.dart';
@@ -51,10 +52,10 @@ class _PlayPageState extends State<PlayPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // color: Colors.white,
+      color: Get.isDarkMode?dark_background_Colors:light_background_Colors,
         child: Blur(
             blur: 60,
-            // blurColor: Theme.of(context).primaryColor,
+            blurColor: Theme.of(context).primaryColor,
             overlay: Column(
               children: [
                 Row(
@@ -94,7 +95,7 @@ class _PlayPageState extends State<PlayPage> {
                                             '名称：${serviceController.musicName
                                                 .value}',
                                             style: TextStyle(
-                                                color: Colors.black,
+                                                color: Get.isDarkMode? dark_text_Colors : light_text_Colors,
                                                 fontSize: 20,
                                                 decoration: TextDecoration
                                                     .none),
@@ -106,7 +107,7 @@ class _PlayPageState extends State<PlayPage> {
                                             '歌手：${serviceController
                                                 .musicArtist.value}',
                                             style: TextStyle(
-                                                color: Colors.black,
+                                                color: Get.isDarkMode? dark_text_Colors : light_text_Colors,
                                                 fontSize: 20,
                                                 decoration: TextDecoration
                                                     .none),
@@ -117,7 +118,7 @@ class _PlayPageState extends State<PlayPage> {
                                             '专辑：${serviceController.musicAlubm
                                                 .value}',
                                             style: TextStyle(
-                                                color: Colors.black,
+                                                color: Get.isDarkMode? dark_text_Colors : light_text_Colors,
                                                 fontSize: 20,
                                                 decoration: TextDecoration
                                                     .none),
@@ -146,8 +147,6 @@ class _PlayPageState extends State<PlayPage> {
                                     flex: 1,
                                     child: Obx(() {
                                       return
-
-
                                         LyricsReader(
                                         padding: const EdgeInsets.all(8.0),
                                         position: nowDuration.value,

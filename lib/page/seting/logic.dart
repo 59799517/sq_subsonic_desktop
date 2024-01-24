@@ -232,6 +232,8 @@ class SetingLogic extends GetxController {
       box.put("show_artist_image", "false"),
       //显示歌曲图片
       box.put("show_song_image", "false"),
+      //主题
+      box.put("system_theme", "light"),
 
       //当前登录用户名称
       box.put("service_username", "SQ")
@@ -452,14 +454,14 @@ class SetingLogic extends GetxController {
     if(result == null){
       return false;
     }
-
+     var box = await Hive.openBox("server_info");
+     box.put("ip", ip);
+     box.put("username", username);
+     box.put("password", password);
 
     var result2 = result["subsonic-response"]["status"];
     if(result2 == "ok"){
-      var box = await Hive.openBox("server_info");
-      box.put("ip", ip);
-      box.put("username", username);
-      box.put("password", password);
+
       var box2 = await Hive.openBox("server_info_subsonic_api_info");
       box2.putAll(buildCheckiRequest);
       sercer_check_status.value=true;

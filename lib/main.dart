@@ -29,9 +29,9 @@ import 'package:sq_subsonic_desktop/utils/DurationUtils.dart';
 import 'package:path/path.dart' as p;
 import 'package:window_manager/window_manager.dart';
 import 'color/ColrosUtils.dart';
+import 'color/SqThemeData.dart';
 
 void main() async {
-  runApp(const MyApp());
   var path = Directory.current.path;
   var context = p.Context();
 
@@ -44,7 +44,16 @@ void main() async {
   var serviceController = Get.put(ServiceController());
   var setingLogic = Get.put(SetingLogic());
   setingLogic.checkService();
-  setingLogic.initSetConfig();
+
+  var cbox = await Hive.openBox('set_server_config');
+  var tname = cbox.get("system_theme");
+  if(tname == "dark"){
+    runApp( MyApp(appDarkThemeData));
+  }else{
+    runApp( MyApp(appLightThemeData));
+  }
+
+  // setingLogic.initSetConfig();
   // // serviceController.onInit();
   MainMenuController().init();
 
@@ -65,12 +74,18 @@ void main() async {
 const borderColor = Color(0xFF805306);
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  // const MyApp() : super(key: key);
+
+  ThemeData themeData;
+
+
+  MyApp(this.themeData,{Key? key});
 
   @override
   Widget build(BuildContext context) {
+
     return GetMaterialApp(
-      theme: ThemeData(fontFamily: 'alittf'),
+      theme: themeData,
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: WindowBorder(
@@ -96,7 +111,6 @@ class LeftSide extends StatelessWidget {
     return SizedBox(
         width: 200,
         child: Container(
-            color: ColrosUtils.fromHex("#f2f2f2"),
             child: Column(
               children: [
                 WindowTitleBarBox(child: MoveWindow()),
@@ -141,13 +155,13 @@ class _RightSide extends State<RightSide> {
             onPressed: () {
               serviceController.pause();
             },
-            icon: Icon(LineIcons.pauseCircleAlt));
+            icon: Icon(LineIcons.pauseCircleAlt,color:  Get.isDarkMode?dark_text_Colors:light_text_Colors));
       } else if (state == PlayerState.paused) {
         playbutton = IconButton(
             onPressed: () {
               serviceController.resume();
             },
-            icon: Icon(LineIcons.playCircle));
+            icon: Icon(LineIcons.playCircle,color:  Get.isDarkMode?dark_text_Colors:light_text_Colors));
       } else if (state == PlayerState.stopped) {
         playbutton = IconButton(
             onPressed: () {
@@ -157,7 +171,7 @@ class _RightSide extends State<RightSide> {
                 position: StyledToastPosition.center,
               );
             },
-            icon: Icon(LineIcons.playCircle));
+            icon: Icon(LineIcons.playCircle,color:  Get.isDarkMode?dark_text_Colors:light_text_Colors,));
       }
     });
   }
@@ -235,17 +249,20 @@ class _RightSide extends State<RightSide> {
                         child: SliderTheme(
                           data: SliderTheme.of(context).copyWith(
                             trackHeight: 3,
-                            thumbColor: Colors.orange,
-                            activeTrackColor: Colors.green,
-                            inactiveTrackColor: Colors.black26,
+                            thumbColor: Colors.green,
+                            activeTrackColor: Get.isDarkMode?dark_text_Colors:light_text_Colors,
+                            // inactiveTrackColor: GFColors.SUCCESS,
                             overlayColor: Colors.purple,
+
                             thumbShape:
                                 RoundSliderThumbShape(enabledThumbRadius: 5),
                             overlayShape:
                                 RoundSliderOverlayShape(overlayRadius: 5),
                           ),
                           child:
-                              GetBuilder<ServiceController>(builder: (logic) {
+                              GetBuilder<ServiceController>(
+                                  id: "play_slider_view",
+                                  builder: (logic) {
                             return Slider(
                               value: nowDuration,
                               max: logic.musicDuration.value,
@@ -337,8 +354,8 @@ class _RightSide extends State<RightSide> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          Text("${logic.musicName.value}"),
-                                          Text(logic.musicArtist.value),
+                                          Text("${logic.musicName.value}",style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
+                                          Text(logic.musicArtist.value,style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
                                         ],
                                       );
                                     }),
@@ -366,7 +383,7 @@ class _RightSide extends State<RightSide> {
                                                         logic.previous(context);
                                                       },
                                                       icon: Icon(LineIcons
-                                                          .stepBackward))),
+                                                          .stepBackward,color:  Get.isDarkMode?dark_text_Colors:light_text_Colors,))),
                                               Expanded(
                                                   flex: 1, child: Container()),
                                               Expanded(
@@ -382,7 +399,7 @@ class _RightSide extends State<RightSide> {
                                                         logic.next(context);
                                                       },
                                                       icon: Icon(LineIcons
-                                                          .stepForward))),
+                                                          .stepForward,color:  Get.isDarkMode?dark_text_Colors:light_text_Colors,))),
                                               Expanded(
                                                   flex: 1, child: Container()),
                                               Expanded(
@@ -400,14 +417,14 @@ class _RightSide extends State<RightSide> {
                                                                 .value ==
                                                             LoopType.playList
                                                         ? Icon(SqFontIcons
-                                                            .iconXunhuan)
+                                                            .iconXunhuan,color:  Get.isDarkMode?dark_text_Colors:light_text_Colors,)
                                                         : logic.loopType
                                                                     .value ==
                                                                 LoopType.random
                                                             ? Icon(SqFontIcons
-                                                                .iconSuijisenlin)
+                                                                .iconSuijisenlin,color:  Get.isDarkMode?dark_text_Colors:light_text_Colors,)
                                                             : Icon(SqFontIcons
-                                                                .iconA25px),
+                                                                .iconA25px,color:  Get.isDarkMode?dark_text_Colors:light_text_Colors,),
                                                     onPressed: () {
                                                       logic.setPlayListType();
                                                     },
@@ -473,7 +490,7 @@ class _RightSide extends State<RightSide> {
                                                               height: 700,
                                                               width: 500,
                                                               color:
-                                                                  Colors.white,
+                                                              Get.isDarkMode?dark_background_Colors:light_background_Colors,
                                                               child: GetBuilder<
                                                                       ServiceController>(
                                                                   id:
@@ -482,17 +499,18 @@ class _RightSide extends State<RightSide> {
                                                                       (logic) {
                                                                     return Blur(
                                                                       // borderRadius: BorderRadius.all(Radius.circular(100)),
-                                                                      // blurColor: Colors.black26,
+                                                                      blurColor: Get.isDarkMode?dark_background_Colors:light_background_Colors,
                                                                       child:
                                                                           Container(),
                                                                       overlay:
                                                                           Container(
+
                                                                         decoration:
                                                                             BoxDecoration(
                                                                           // color: Colors.green ,// 背景色
                                                                           border: new Border
                                                                               .all(
-                                                                              color: Colors.white12,
+                                                                              color: Get.isDarkMode?dark_background_Colors:light_background_Colors,
                                                                               width: 3),
                                                                           // border
                                                                           borderRadius:
@@ -517,7 +535,8 @@ class _RightSide extends State<RightSide> {
                                                                                         Navigator.of(context).pop();
                                                                                       },
                                                                                       name: '清空全部',
-                                                                                      icon: Icon(Icons.delete)),
+
+                                                                                      icon: Icon(Icons.delete,color: Get.isDarkMode?dark_text_Colors:light_text_Colors,)),
                                                                                 ),
                                                                               ],
                                                                             )),
@@ -526,8 +545,8 @@ class _RightSide extends State<RightSide> {
                                                                               child: ListView.builder(
                                                                                 itemBuilder: (BuildContext context, int index) {
                                                                                   return GFListTile(
-                                                                                    title: Text("${logic.playlist.value[index].title}"),
-                                                                                    subTitleText: logic.playlist.value[index].album,
+                                                                                    title: Text("${logic.playlist.value[index].title}",style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
+                                                                                    subTitle:Text(logic.playlist.value[index].album,style: TextStyle(color: Get.isDarkMode?dark_sub_text_Colors:light_sub_text_Colors)),
                                                                                     avatar: GFAvatar(backgroundImage: NetworkImage(logic.playlist.value[index].coverArt), shape: GFAvatarShape.standard),
                                                                                     icon: Row(
                                                                                       children: [
@@ -573,7 +592,7 @@ class _RightSide extends State<RightSide> {
                                                         );
                                                       },
                                                       icon: Icon(
-                                                          LineIcons.history))),
+                                                          LineIcons.history,color:  Get.isDarkMode?dark_text_Colors:light_text_Colors,))),
                                               Expanded(
                                                 flex: 1,
                                                 child: Container(),
@@ -620,15 +639,15 @@ class _RightSide extends State<RightSide> {
                                                       max: 1.0,
                                                       // label: "${serviceController.player.volume*100.truncate()}",
                                                       activeColor:
-                                                          Colors.black87,
-                                                      inactiveColor:
-                                                          Colors.black26,
+                                                       Get.isDarkMode?dark_text_Colors:light_text_Colors,
+                                                      // inactiveColor:
+                                                      //     Colors.black26,
                                                     ),
                                                   ),
                                                   Expanded(
                                                       flex: 6,
                                                       child: Text(
-                                                          "${(serviceController.getvolume() * 100).truncate()}")),
+                                                          "${(serviceController.getvolume() * 100).truncate()}",style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors),)),
                                                   Expanded(
                                                       flex: 13,
                                                       child: Container()),
@@ -644,7 +663,7 @@ class _RightSide extends State<RightSide> {
                                 children: [
                                   Container(
                                     child: Text(
-                                        "${DurationUtils.formatDurationBySeconds(nowDuration.toInt())}/${DurationUtils.formatDurationBySeconds(serviceController.musicDuration.value.toInt())}"),
+                                        "${DurationUtils.formatDurationBySeconds(nowDuration.toInt())}/${DurationUtils.formatDurationBySeconds(serviceController.musicDuration.value.toInt())}",style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors),),
                                   ),
                                 ],
                               ))

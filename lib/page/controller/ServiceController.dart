@@ -57,6 +57,7 @@ class ServiceController extends GetxController {
  var showAlbumImage =false.obs;
   var showArtistImage =false.obs;
   var showSongImage =false.obs;
+  var themeName = "light".obs;
   //直接打开歌曲跳过专辑
   var openArtistToMusic = false.obs;
   var loginName = "".obs;
@@ -354,6 +355,7 @@ class ServiceController extends GetxController {
         musicArtist.value = nowMusic.artist!;
         updatePlayListSet();
       }
+      update(["musicName_view", "musicImageUrl_view", "lyric_view","play_slider_view"]);
 
 
     }
@@ -376,7 +378,7 @@ class ServiceController extends GetxController {
       musicArtist.value = nowMusic.artist!;
       musicDuration.value = nowMusic.duration!.toDouble();
       updatePlayListSet();
-      update(["musicName_view", "musicImageUrl_view", "lyric_view"]);
+      update(["musicName_view", "musicImageUrl_view", "lyric_view","play_slider_view"]);
     }
   }
 
@@ -426,6 +428,8 @@ class ServiceController extends GetxController {
         );
       }
     }
+    update(["musicName_view", "musicImageUrl_view", "lyric_view","play_slider_view"]);
+
   }
 
   previous(BuildContext context) async {
@@ -449,7 +453,7 @@ class ServiceController extends GetxController {
       musicArtist.value = nowMusic.artist!;
       musicDuration.value = nowMusic.duration!.toDouble();
       updatePlayListSet();
-      update(["musicName_view", "musicImageUrl_view", "lyric_view"]);
+      update(["musicName_view", "musicImageUrl_view", "lyric_view","play_slider_view"]);
     }
   }
 

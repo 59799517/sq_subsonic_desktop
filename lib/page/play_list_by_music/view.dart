@@ -7,6 +7,7 @@ import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:sq_subsonic_desktop/color/ColrosUtils.dart';
 import 'package:sq_subsonic_desktop/page/controller/ServiceController.dart';
 
+import '../../color/SqThemeData.dart';
 import 'logic.dart';
 
 class PlayListByMusicPage extends StatefulWidget {
@@ -50,26 +51,26 @@ class _PlayListByMusicPageState extends State<PlayListByMusicPage> {
           isHorizontalScrollBarVisible: false,
           columns: [
             DataColumn2(
-              label: Text('头像'),
+              label: Text('头像',style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
               size: ColumnSize.L,
             ),
             DataColumn2(
-              label: Text('名称'),
+              label: Text('名称',style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
               size: ColumnSize.L,
             ),
             DataColumn(
-              label: Text('歌手'),
+              label: Text('歌手',style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
             ),
             DataColumn(
-              label: Text('专辑'),
+              label: Text('专辑',style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
             ),
             DataColumn(
-              label: Text('格式'),
+              label: Text('格式',style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
             ),
             DataColumn(
               label: Row(
                 children: [
-                  Text("操作"),
+                  Text("操作",style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
                   GFButton(shape: GFButtonShape.pills,
                     // splashColor: Colors.blueAccent,
                     borderShape: const RoundedRectangleBorder(
@@ -80,6 +81,7 @@ class _PlayListByMusicPageState extends State<PlayListByMusicPage> {
                     ),
                     // type: GFButtonType.outline,
                     type: GFButtonType.outline,
+
                     // blockButton: true,
                     // highlightColor:Colors.orange,
                     color: Colors.transparent,
@@ -87,7 +89,7 @@ class _PlayListByMusicPageState extends State<PlayListByMusicPage> {
                     hoverColor: ColrosUtils.fromHex("#dcdcdc"),
                     animationDuration: Duration(milliseconds: 3),
                     icon: Icon(Icons.play_arrow,color: Colors.redAccent,),
-                    child: Text("播放全部",style: TextStyle(color: Colors.black,fontFamily: 'alittf'),),
+                    child: Text("播放全部",style: TextStyle(color:Get.isDarkMode?dark_text_Colors:light_text_Colors,fontFamily: 'alittf'),),
                     hoverElevation: 0, onPressed: () {
                       serviceController.addPlayListData(musiclogic.playViewData);
                     },)
@@ -107,20 +109,20 @@ class _PlayListByMusicPageState extends State<PlayListByMusicPage> {
             //   size: ColumnSize.L,
             // ),
             DataColumn2(
-              label: Text('名称'),
+              label: Text('名称',style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
               size: ColumnSize.L,
             ),
             DataColumn(
-              label: Text('歌手'),
+              label: Text('歌手',style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
             ),
             DataColumn(
-              label: Text('专辑'),
+              label: Text('专辑',style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
             ),
             DataColumn(
-              label: Text('格式'),
+              label: Text('格式',style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
             ),
             DataColumn(
-              label: Text('操作'),
+              label: Text('操作',style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
             ),
           ],
           rows: widget.lists),

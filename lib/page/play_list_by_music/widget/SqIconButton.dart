@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sq_subsonic_desktop/color/SqThemeData.dart';
 import 'package:sq_subsonic_desktop/page/controller/ServiceController.dart';
 import 'package:sq_subsonic_desktop/page/play_list_by_music/logic.dart';
 
@@ -29,7 +30,7 @@ class _SqStarIconButtonState extends State<SqStarIconButton> {
     return IconButton(
       icon: Icon(
         Icons.star_rate_outlined,
-        color: widget.star ? Colors.redAccent : Colors.black,
+        color: widget.star ? Colors.redAccent : Get.isDarkMode?dark_text_Colors:light_text_Colors,
         size: 25,
       ),
       onPressed: () {

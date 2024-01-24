@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lyric/lyrics_reader.dart';
+import 'package:get/get.dart';
+import 'package:sq_subsonic_desktop/color/SqThemeData.dart';
 
 class SqLyricUI extends LyricUI {
   double defaultSize;
@@ -51,11 +53,11 @@ class SqLyricUI extends LyricUI {
 
   @override
   TextStyle getOtherMainTextStyle() =>
-      TextStyle(color: Colors.black87, fontSize: otherMainSize,decoration: TextDecoration.none);
+      TextStyle(color: Get.isDarkMode? dark_text_Colors : light_text_Colors, fontSize: otherMainSize,decoration: TextDecoration.none);
 
   @override
   TextStyle getPlayingMainTextStyle() => TextStyle(
-    color: Colors.black,
+    color: Get.isDarkMode? dark_text_Colors : light_text_Colors,
     fontSize: defaultSize,
   );
 

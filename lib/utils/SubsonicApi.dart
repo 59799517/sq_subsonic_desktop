@@ -174,14 +174,23 @@ class SubsonicApi {
     Map<String,dynamic> song = {};
     Map<String,dynamic> artist = {};
     Map<String,dynamic> album = {};
-    for (var value in starResult.subsonicResponse!.starred!.song!) {
-      song[value.id!] = value.toJson();
+    try {
+      for (var value in starResult.subsonicResponse!.starred!.song!) {
+            song[value.id!] = value.toJson();
+          }
+    } catch (e) {
     }
-    for (var value in starResult.subsonicResponse!.starred!.artist!) {
-      artist[value.id!] = value.toJson();
+    try {
+      for (var value in starResult.subsonicResponse!.starred!.artist!) {
+            artist[value.id!] = value.toJson();
+          }
+    } catch (e) {
     }
-    for (var value in starResult.subsonicResponse!.starred!.album!) {
-      album[value.id!] = value.toJson();
+    try {
+      for (var value in starResult.subsonicResponse!.starred!.album!) {
+            album[value.id!] = value.toJson();
+          }
+    } catch (e) {
     }
 
     Hive.openBox("play_list_star_song").then((box) => {

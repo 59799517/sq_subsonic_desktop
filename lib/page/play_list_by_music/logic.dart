@@ -19,6 +19,8 @@ import 'package:sq_subsonic_desktop/subsonic/models/RandomSongsResult.dart';
 import 'package:sq_subsonic_desktop/subsonic/models/SqSearchResult2.dart';
 import 'package:sq_subsonic_desktop/utils/SubsonicApi.dart';
 
+import '../../color/SqThemeData.dart';
+
 class PlayListByMusicLogic extends GetxController {
   final serviceController = Get.put(ServiceController());
 
@@ -129,11 +131,11 @@ class PlayListByMusicLogic extends GetxController {
         var imageurl =
         await SubsonicApi.getCoverArtRequestToImageUrl(element.id);
         playLists.add(GFListTile(
-          titleText: element.name,
-          subTitleText: '共有 ${element.songCount} 首',
+          title:Text(element.name,style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors)),
+          subTitle:Text('共有 ${element.songCount} 首',style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors)) ,
           avatar: imageurl.isEmpty
               ? GFAvatar(
-              child: Text(element.name[0]), shape: GFAvatarShape.standard)
+              child: Text(element.name[0],style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors)), shape: GFAvatarShape.standard)
               : Image.network(
             imageurl,
             errorBuilder: (ctx, err, stackTrace) {
@@ -237,19 +239,19 @@ class PlayListByMusicLogic extends GetxController {
           DataCell(
             imageurl.isEmpty
                 ? GFAvatar(
-                child: Text(element.title[0]), shape: GFAvatarShape.standard)
+                child: Text(element.title[0],style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),), shape: GFAvatarShape.standard)
                 : Image.network(
               imageurl,
               errorBuilder: (ctx, err, stackTrace) {
                 return GFAvatar(
-                    child: Text(element.title[0]),
+                    child: Text(element.title[0],style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
                     shape: GFAvatarShape.standard);
               },
               width: 70,
               height: 70,
             ),
           ),
-          DataCell(Text(element.title!)),
+          DataCell(Text(element.title!,style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors))),
           DataCell(RichText(
             text: TextSpan(
                 text: element.artist!,
@@ -290,7 +292,7 @@ class PlayListByMusicLogic extends GetxController {
                     })
                   }),
           )),
-          DataCell(Text(element.suffix.toString())),
+          DataCell(Text(element.suffix.toString(),style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors))),
           DataCell(Row(
             children: [
               GetBuilder<LeftController>(builder: (logic) {
@@ -298,12 +300,12 @@ class PlayListByMusicLogic extends GetxController {
                   icon: is_deleted.value
                       ? Icon(
                     Icons.minimize,
-                    color: Colors.black,
+                    color: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                     size: 25,
                   )
                       : Icon(
                     Icons.add,
-                    color: Colors.black,
+                    color: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                     size: 25,
                   ),
                   onPressed: () async {
@@ -320,7 +322,7 @@ class PlayListByMusicLogic extends GetxController {
                         if (value != null) {
                           service_Playlist.add(
                               GFListTile(
-                                titleText: value.name,
+                                title:Text( value.name,style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
                                 onTap: () {
                                   SubsonicApi.updatePlaylistSongRequest(
                                       value.id, element.id).then((
@@ -338,7 +340,7 @@ class PlayListByMusicLogic extends GetxController {
                           context: Get.context!,
                           builder: (context) {
                             return AlertDialog(
-                              title: Text("选择添加歌单"),
+                              title: Text("选择添加歌单",style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors)),
                               content: Container(
                                 width: 200,
                                 height: 200,
@@ -361,7 +363,7 @@ class PlayListByMusicLogic extends GetxController {
               IconButton(
                 icon: Icon(
                   LineIcons.play,
-                  color: Colors.black,
+                  color: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                   size: 25,
                 ),
                 onPressed: () {
@@ -381,10 +383,10 @@ class PlayListByMusicLogic extends GetxController {
       for( int i = 0; i<data.length; i++){
         var element = data[i];
         var dataRow = DataRow(cells: [
-          DataCell(Text(element.title!)),
+          DataCell(Text(element.title!,style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors))),
           DataCell(RichText(
             text: TextSpan(
-                text: element.album!,
+                text: element.artist!,
                 style: TextStyle(
                   color: Colors.blueAccent,
                 ),
@@ -422,7 +424,7 @@ class PlayListByMusicLogic extends GetxController {
                     })
                   }),
           )),
-          DataCell(Text(element.suffix.toString())),
+          DataCell(Text(element.suffix.toString(),style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors))),
           DataCell(Row(
             children: [
               GetBuilder<LeftController>(builder: (logic) {
@@ -430,12 +432,12 @@ class PlayListByMusicLogic extends GetxController {
                   icon: is_deleted.value
                       ? Icon(
                     Icons.minimize,
-                    color: Colors.black,
+                    color: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                     size: 25,
                   )
                       : Icon(
                     Icons.add,
-                    color: Colors.black,
+                    color: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                     size: 25,
                   ),
                   onPressed: () async {
@@ -453,6 +455,7 @@ class PlayListByMusicLogic extends GetxController {
                           service_Playlist.add(
                               GFListTile(
                                 titleText: value.name,
+
                                 onTap: () {
                                   SubsonicApi.updatePlaylistSongRequest(
                                       value.id, element.id).then((
@@ -470,7 +473,7 @@ class PlayListByMusicLogic extends GetxController {
                           context: Get.context!,
                           builder: (context) {
                             return AlertDialog(
-                              title: Text("选择添加歌单"),
+                              title: Text("选择添加歌单",style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
                               content: Container(
                                 width: 200,
                                 height: 200,
@@ -493,7 +496,7 @@ class PlayListByMusicLogic extends GetxController {
               IconButton(
                 icon: Icon(
                   LineIcons.play,
-                  color: Colors.black,
+                  color: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                   size: 25,
                 ),
                 onPressed: () {

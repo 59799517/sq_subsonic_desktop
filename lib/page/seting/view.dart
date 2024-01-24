@@ -10,6 +10,7 @@ import 'package:getwidget/types/gf_button_type.dart';
 import 'package:getwidget/types/gf_typography_type.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:sq_subsonic_desktop/color/ColrosUtils.dart';
+import 'package:sq_subsonic_desktop/color/SqThemeData.dart';
 import 'package:sq_subsonic_desktop/page/controller/ServiceController.dart';
 import 'package:sq_subsonic_desktop/page/left_widget/LeftController.dart';
 import 'package:sq_subsonic_desktop/page/seting/widget/HotKeyText.dart';
@@ -48,6 +49,7 @@ class SetingPage extends StatelessWidget {
                           flex: 7,
                           child: Container(
                             child: GFTypography(
+                              textColor: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                               text: '热键设置',
                               type: GFTypographyType.typo3,
                             ),
@@ -56,6 +58,7 @@ class SetingPage extends StatelessWidget {
                         Expanded(
                           flex: 6,
                           child: GFTypography(
+                            textColor: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                             text: '系统',
                             type: GFTypographyType.typo3,
                             showDivider: false,
@@ -73,6 +76,7 @@ class SetingPage extends StatelessWidget {
                                   // color: Colors.black26,
                                   child: GFTypography(
                                     text: '全局',
+                                    textColor: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                                     type: GFTypographyType.typo3,
                                     showDivider: false,
                                   ),
@@ -121,7 +125,7 @@ class SetingPage extends StatelessWidget {
                             hoverElevation: 0,
                             child: Obx(() {
                               return Text(
-                                  logic.readOnly.value ? "编辑" : "确定");
+                                  logic.readOnly.value ? "编辑" : "确定",style: TextStyle(color:Get.isDarkMode?dark_text_Colors:light_text_Colors),);
                             }),
                             onPressed: () {
                               logic.setReadOnly();
@@ -132,9 +136,10 @@ class SetingPage extends StatelessWidget {
                           flex: 1,
                           child: GFButton(
                             type: GFButtonType.outline,
+
                             // shape: GFButtonShape.pills,
                             splashColor: Colors.blueAccent,
-                            child: Text("重置快捷键"),
+                            child: Text("重置快捷键",style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors,),),
                             borderShape: const RoundedRectangleBorder(
                               //边框圆角
                               borderRadius: BorderRadius.all(
@@ -148,7 +153,6 @@ class SetingPage extends StatelessWidget {
                             hoverColor: ColrosUtils.fromHex("#dcdcdc"),
                             animationDuration: Duration(milliseconds: 3),
                             hoverElevation: 0,
-
                             onPressed: () {
                               logic.initSetConfig();
                               logic.onInit();
@@ -181,6 +185,7 @@ class SetingPage extends StatelessWidget {
                                     Expanded(
                                       child: GFTypography(
                                         text: '暂停/播放：',
+                                        textColor: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                                         type: GFTypographyType.typo4,
                                         showDivider: false,
                                       ),
@@ -188,6 +193,7 @@ class SetingPage extends StatelessWidget {
                                     Expanded(
                                       child: GFTypography(
                                         text: '下一曲：',
+                                        textColor: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                                         type: GFTypographyType.typo4,
                                         showDivider: false,
                                       ),
@@ -195,6 +201,7 @@ class SetingPage extends StatelessWidget {
                                     Expanded(
                                       child: GFTypography(
                                         text: '上一曲：',
+                                        textColor: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                                         type: GFTypographyType.typo4,
                                         showDivider: false,
                                       ),
@@ -202,6 +209,7 @@ class SetingPage extends StatelessWidget {
                                     Expanded(
                                       child: GFTypography(
                                         text: '音量+：',
+                                        textColor: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                                         type: GFTypographyType.typo4,
                                         showDivider: false,
                                       ),
@@ -209,6 +217,7 @@ class SetingPage extends StatelessWidget {
                                     Expanded(
                                       child: GFTypography(
                                         text: '音量-：',
+                                        textColor: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                                         type: GFTypographyType.typo4,
                                         showDivider: false,
                                       ),
@@ -325,6 +334,7 @@ class SetingPage extends StatelessWidget {
                           Expanded(
                             child: GFTypography(
                               text: '列表设置',
+                              textColor: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                               type: GFTypographyType.typo3,
                             ),),
                           Expanded(
@@ -337,6 +347,7 @@ class SetingPage extends StatelessWidget {
                                     flex: 1,
                                     child: GFTypography(
                                         text: '歌手直接打开音乐',
+                                        textColor: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                                         type: GFTypographyType.typo4,
                                         showDivider: false
                                     )),
@@ -365,6 +376,7 @@ class SetingPage extends StatelessWidget {
                                     flex: 1,
                                     child: GFTypography(
                                         text: '显示歌手图片',
+                                        textColor: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                                         type: GFTypographyType.typo4,
                                         showDivider: false
                                     )),
@@ -393,6 +405,7 @@ class SetingPage extends StatelessWidget {
                                     flex: 1,
                                     child: GFTypography(
                                         text: '显示专辑图片',
+                                        textColor: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                                         type: GFTypographyType.typo4,
                                         showDivider: false
                                     )),
@@ -421,6 +434,7 @@ class SetingPage extends StatelessWidget {
                                     flex: 1,
                                     child: GFTypography(
                                         text: '显示音乐图片',
+                                        textColor: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                                         type: GFTypographyType.typo4,
                                         showDivider: false
                                     )),
@@ -439,7 +453,40 @@ class SetingPage extends StatelessWidget {
                               ],
                             ),
                           ),
-
+                          Expanded(
+                            flex: 1,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                    flex: 1,
+                                    child: GFTypography(
+                                        text: '主题切换',
+                                        textColor: Get.isDarkMode?dark_text_Colors:light_text_Colors,
+                                        type: GFTypographyType.typo4,
+                                        showDivider: false
+                                    )),
+                                Expanded(
+                                  flex: 1,
+                                  child: Switch(
+                                      activeColor: Colors.green,
+                                      splashRadius: 0,
+                                      inactiveThumbColor: Colors.black26,
+                                      value: serviceController.themeName.value=="dark"?true:false,
+                                      onChanged: (value) {
+                                        serviceController.themeName.value = value?"dark":"light";
+                                        if(value){
+                                          Get.changeTheme(appDarkThemeData);
+                                        }else{
+                                          Get.changeTheme(appLightThemeData);
+                                        }
+                                        logic.setServeConfig("system_theme", value?"dark":"light");
+                                        serviceController.update(["show_config_view"]);
+                                      }),),
+                              ],
+                            ),
+                          ),
                         ],
                       )
                   );
@@ -464,7 +511,7 @@ class SetingPage extends StatelessWidget {
                                         children: [
                                           Text(
                                             "服务器设置:",
-                                            style: TextStyle(fontSize: 20),
+                                            style: TextStyle(fontSize: 20,color:  Get.isDarkMode?dark_text_Colors:light_text_Colors,),
                                           ),
                                           Icon(
                                             LineIcons.server,
@@ -485,7 +532,7 @@ class SetingPage extends StatelessWidget {
                                 children: [
                                   Expanded(
                                       child: Container(
-                                        child: Text("服务器IP"),
+                                        child: Text("服务器IP",style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors),),
                                       )),
                                   Expanded(
                                       child: Container(
@@ -510,7 +557,7 @@ class SetingPage extends StatelessWidget {
                                 children: [
                                   Expanded(
                                       child: Container(
-                                        child: Text("用户名"),
+                                        child: Text("用户名",style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors)),
                                       )),
                                   Expanded(
                                       child: Container(
@@ -533,7 +580,7 @@ class SetingPage extends StatelessWidget {
                                 children: [
                                   Expanded(
                                       child: Container(
-                                        child: Text("密码"),
+                                        child: Text("密码",style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors)),
                                       )),
                                   Expanded(
                                       child: Container(

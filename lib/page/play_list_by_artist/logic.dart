@@ -5,6 +5,7 @@ import 'package:getwidget/getwidget.dart';
 import 'package:hive/hive.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:sq_subsonic_desktop/color/SqThemeData.dart';
 import 'package:sq_subsonic_desktop/page/controller/ServiceController.dart';
 import 'package:sq_subsonic_desktop/page/play_list_by_album/logic.dart';
 import 'package:sq_subsonic_desktop/page/play_list_by_album/view.dart';
@@ -64,14 +65,14 @@ class PlayListByArtistLogic extends GetxController {
         var imageurl = await  SubsonicApi.getCoverArtRequestToImageUrl(element.id);
         playLists.add(
             GFListTile(
-              titleText: element.name,
-              subTitleText:'共计${element.albumCount}张专辑',
+              title:Text(element.name,style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors)),
+              subTitle:Text('共计${element.albumCount}张专辑',style: TextStyle(color: Get.isDarkMode?dark_sub_text_Colors:light_sub_text_Colors)) ,
               avatar: imageurl.isEmpty?GFAvatar(
-                  child: Text(element.name[0]),
+                  child: Text(element.name[0],style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors)),
                   shape: GFAvatarShape.standard
               ): Image.network(imageurl,errorBuilder: (ctx,err,stackTrace){
                 return GFAvatar(
-                    child: Text(element.name[0]),
+                    child: Text(element.name[0],style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
                     shape: GFAvatarShape.standard
                 );
               },width: 70, height: 70,),
@@ -98,7 +99,7 @@ class PlayListByArtistLogic extends GetxController {
 
 
 
-                  }, icon: Icon(LineIcons.angleRight, color: Colors.black,size: 25,))
+                  }, icon: Icon(LineIcons.angleRight, color: Get.isDarkMode?dark_text_Colors:light_text_Colors,size: 25,))
                   ,
                 ],
               ),
@@ -123,8 +124,8 @@ class PlayListByArtistLogic extends GetxController {
       for (var element in data) {
         playLists.add(
             GFListTile(
-              titleText: element.name,
-              subTitleText:'共计${element.albumCount}张专辑',
+              title: Text(element.name!,style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors)),
+              subTitle: Text('共计${element.albumCount}张专辑',style: TextStyle(color: Get.isDarkMode?dark_sub_text_Colors:light_sub_text_Colors)),
               icon: Row(
                 children: [
                   SqStarIconButton(element.id!,box.get(element.id)!=null?true:false,callBack: (){
@@ -144,7 +145,7 @@ class PlayListByArtistLogic extends GetxController {
                         serviceController.showWidget.value = Container(child: PlayListByAlbumPage(value,PlayListByAlbumPageType.none));
                       });
                     }
-                  }, icon: Icon(LineIcons.angleRight, color: Colors.black,size: 25,))
+                  }, icon: Icon(LineIcons.angleRight, color: Get.isDarkMode?dark_text_Colors:light_text_Colors,size: 25,))
                   ,
                 ],
               ),

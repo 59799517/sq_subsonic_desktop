@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:getwidget/shape/gf_button_shape.dart';
 import 'package:sq_subsonic_desktop/color/ColrosUtils.dart';
+import 'package:sq_subsonic_desktop/color/SqThemeData.dart';
 
 class BlockButtonWidget extends GFButton {
 
@@ -13,7 +15,7 @@ class BlockButtonWidget extends GFButton {
     }) : super(
           onPressed: onPressed,
           // text: name,
-          child: Text(name),
+          child: Text(name,style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
           shape: GFButtonShape.pills,
           splashColor: Colors.blueAccent,
           borderShape: const RoundedRectangleBorder(
@@ -26,9 +28,9 @@ class BlockButtonWidget extends GFButton {
         type: GFButtonType.outline,
         blockButton: true,
         // highlightColor:Colors.orange,
-        color: Colors.transparent,
+        color: Get.isDarkMode?dark_background_Colors:light_background_Colors,
         buttonBoxShadow: true,
-        hoverColor: ColrosUtils.fromHex("#dcdcdc"),
+        hoverColor: Get.isDarkMode?dark_text_Colors:light_text_Colors,
         animationDuration: Duration(milliseconds: 3),
         hoverElevation: 0,
 );

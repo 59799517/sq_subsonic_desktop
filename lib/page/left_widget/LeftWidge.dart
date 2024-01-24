@@ -6,6 +6,7 @@ import 'package:getwidget/getwidget.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:sq_subsonic_desktop/color/ColrosUtils.dart';
+import 'package:sq_subsonic_desktop/color/SqThemeData.dart';
 import 'package:sq_subsonic_desktop/page/controller/ServiceController.dart';
 
 import '../right_widget/RightWidget.dart';
@@ -26,8 +27,6 @@ class _LeftWidgeState extends State<LeftWidge> {
   //当前选择右侧
   var activeTab = 1.obs;
 
-//被选中的颜色
-  Color selectClor = ColrosUtils.fromHex("#f2f2f2");
 
   @override
   void initState() {
@@ -42,7 +41,7 @@ class _LeftWidgeState extends State<LeftWidge> {
       Obx(() {
         return GFAvatar(
           radius: 40.0,
-          child: Text(serviceController.loginName.value),
+          child: Text(serviceController.loginName.value,style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors)),
           // backgroundColor: Colors.transparent,
         );
       }),
@@ -54,8 +53,8 @@ class _LeftWidgeState extends State<LeftWidge> {
     listItems.value.clear();
     listItems.value.addAll(baseItems);
     listItems.value.add(ListTile(
-      leading: Icon(LineIcons.music),
-      title: Text('单曲随机'),
+      leading: Icon(LineIcons.music,color:  Get.isDarkMode?dark_text_Colors:light_text_Colors,),
+      title: Text('单曲随机',style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors)),
       selected: index == 0,
       onTap: () {
         leftController.cutove(0);
@@ -63,8 +62,8 @@ class _LeftWidgeState extends State<LeftWidge> {
       },
     ));
     listItems.value.add(ListTile(
-      leading: Icon(LineIcons.user),
-      title: Text('全部歌手'),
+      leading: Icon(LineIcons.user,color:  Get.isDarkMode?dark_text_Colors:light_text_Colors,),
+      title: Text('全部歌手',style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors)),
       selected: index == 1,
       onTap: () {
         leftController.cutove(1);
@@ -72,8 +71,8 @@ class _LeftWidgeState extends State<LeftWidge> {
       },
     ));
     listItems.value.add(ListTile(
-      leading: Icon(LineIcons.compactDisc),
-      title: Text('全部专辑'),
+      leading: Icon(LineIcons.compactDisc,color:  Get.isDarkMode?dark_text_Colors:light_text_Colors,),
+      title: Text('全部专辑',style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors)),
       selected: index == 2,
       onTap: () {
         selectTab(2);
@@ -81,8 +80,8 @@ class _LeftWidgeState extends State<LeftWidge> {
       },
     ));
     listItems.value.add(ListTile(
-      leading: Icon(Icons.settings),
-      title: Text('设置'),
+      leading: Icon(Icons.settings,color:  Get.isDarkMode?dark_text_Colors:light_text_Colors,),
+      title: Text('设置',style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors)),
       selected: index == 3,
       onTap: () {
         leftController.cutove(3);
@@ -95,7 +94,7 @@ class _LeftWidgeState extends State<LeftWidge> {
   Widget build(BuildContext context) {
     return Container(
       // width: 100,
-        color: ColrosUtils.fromHex("#f2f2f2"),
+      //   color: Get.isDarkMode?dark_background_Colors:light_background_Colors,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,

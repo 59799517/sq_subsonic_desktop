@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:sq_subsonic_desktop/color/SqThemeData.dart';
 import 'package:sq_subsonic_desktop/page/controller/ServiceController.dart';
 import 'package:sq_subsonic_desktop/page/play_list_by_album/logic.dart';
 import 'package:sq_subsonic_desktop/page/play_list_by_album/view.dart';
@@ -58,6 +59,7 @@ class LeftController extends GetxController {
     var search = await playListByMusicLogic.random();
     serviceController.showWidget.value =
         Container(child: PlayListByMusicPage(search));
+
   }
 
   artists() async {
@@ -76,7 +78,7 @@ class LeftController extends GetxController {
       child: PlayListByAlbumPage(
           buildAlbumsListView, PlayListByAlbumPageType.albumsList),
     );
-    update(["right_widget"]);
+    update(["right_widget",'play_list_view']);
   }
 
   cutovetoArtistPage() async {
@@ -85,7 +87,8 @@ class LeftController extends GetxController {
     serviceController.showWidget.value = Container(
       child: PlayListByArtistPage(data),
     );
-    update(["right_widget"]);
+    update(["right_widget",'play_list_view']);
+    getPlayLists();
   }
 
   cutovetoAlubmPage() async {
@@ -94,7 +97,8 @@ class LeftController extends GetxController {
     serviceController.showWidget.value = Container(
       child: PlayListByAlbumPage(data, PlayListByAlbumPageType.none),
     );
-    update(["right_widget"]);
+    update(["right_widget",'play_list_view']);
+    getPlayLists();
   }
 
   cutovetoMusicPage() async {
@@ -103,205 +107,198 @@ class LeftController extends GetxController {
     var data = await playListByMusicLogic.buildStarListView();
     serviceController.showWidget.value =
         Container(child: PlayListByMusicPage(data));
-    update(["right_widget"]);
+    update(["right_widget",'play_list_view']);
+    getPlayLists();
   }
 
   getStar() {
     SplayLists_Widget.clear();
-
+    SplayLists_Widget.insert(
+        0,
+        ListTile(
+          leading: Icon(Icons.star_rate_outlined,color:  Get.isDarkMode?dark_text_Colors:light_text_Colors,),
+          title: Text("收藏",style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors),),
+          subtitle: Text("单曲",style: TextStyle(color:  Get.isDarkMode?dark_sub_text_Colors:light_sub_text_Colors)),
+          onTap: () {
+            cutovetoMusicPage();
+          },
+        ));
+    SplayLists_Widget.insert(
+        0,
+        ListTile(
+          leading: Icon(Icons.star_rate_outlined,color:  Get.isDarkMode?dark_text_Colors:light_text_Colors,),
+          title: Text("收藏",style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors)),
+          subtitle: Text("专辑",style: TextStyle(color:  Get.isDarkMode?dark_sub_text_Colors:light_sub_text_Colors)),
+          onTap: () {
+            cutovetoAlubmPage();
+          },
+        ));
+    SplayLists_Widget.insert(
+        0,
+        ListTile(
+          leading: Icon(Icons.star_rate_outlined,color:  Get.isDarkMode?dark_text_Colors:light_text_Colors,),
+          title: Text("收藏",style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors),),
+          subtitle: Text("歌手",style: TextStyle(color:  Get.isDarkMode?dark_sub_text_Colors:light_sub_text_Colors)),
+          onTap: () {
+            cutovetoArtistPage();
+          },
+        ));
     update(["play_list_view"]);
-    SubsonicApi.starRequest().then((res) =>
-    {
-      if (res.subsonicResponse?.status == "ok")
-        {
-          if (res.subsonicResponse?.starred?.song != null)
-            {
-              SplayLists_Widget.insert(
-                  0,
-                  ListTile(
-                    leading: Icon(Icons.star_rate_outlined),
-                    title: Text("收藏"),
-                    subtitle: Text("单曲"),
-                    onTap: () {
-                      cutovetoMusicPage();
-                    },
-                  ))
-            },
-          if (res.subsonicResponse?.starred?.album != null)
-            {
-              SplayLists_Widget.insert(
-                  0,
-                  ListTile(
-                    leading: Icon(Icons.star_rate_outlined),
-                    title: Text("收藏"),
-                    subtitle: Text("专辑"),
-                    onTap: () {
-                      cutovetoAlubmPage();
-                    },
-                  ))
-            },
-          if (res.subsonicResponse?.starred?.artist != null)
-            {
-              SplayLists_Widget.insert(
-                  0,
-                  ListTile(
-                    leading: Icon(Icons.star_rate_outlined),
-                    title: Text("收藏"),
-                    subtitle: Text("歌手"),
-                    onTap: () {
-                      cutovetoArtistPage();
-                    },
-                  ))
-            }
-        }
-    });
+
   }
 
-  getPlayLists() {
+  getPlayLists() async{
     getStar();
-    var playLists = SubsonicApi.playListsRequest();
-    playLists.then((res) {
-      if (res.subsonicResponse?.status == "ok") {
-        serviceController.server_playLists_info_list.value.clear();
-        res.subsonicResponse!.playlists!.playlist!.forEach((element) {
-          serviceController.server_playLists_info_list.value.add(element);
-          SplayLists_Widget.add(ListTile(
-            leading: Icon(LineIcons.clipboardList),
-            title: Text(element.name!),
-            subtitle: Text(element.songCount.toString() + "首"),
-            onTap: () async {
-              playListByMusicLogic.playlistID.value =element.id!;
-              playListByMusicLogic.is_deleted.value=true;
-              List<DataRow> data = await playListByMusicLogic.buildplayListView(
-                  element.id!);
-              if (data.length == 0) {
-                serviceController.showWidget.value =
-                    Container(child: Text("没有数据"));
-                return;
-              }
-              serviceController.showWidget.value =
-                  Container(child: PlayListByMusicPage(data));
-              update(["right_widget"]);
-              serviceController.titleNmae.value = "收藏-${element.name}";
-            },
-            onLongPress: () {
-              _updateController.text = (element.name!);
-              var updated = true.obs;
-              showDialog(
-                  context: Get.context!,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: RichText(text: TextSpan(
-                          children: [
-                            TextSpan(
-                                text: "修改",
-                                style: TextStyle(
-                                  color: Colors.blueAccent,
-                                  fontSize: 20,
+    var res =await  SubsonicApi.playListsRequest();
 
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () =>
-                                  {
-                                    updated.value = true
-                                  }
-                            ),
-                            TextSpan(
-                              text: "/",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                              ),
-                            ),
-                            TextSpan(
-                                text: "删除",
-                                style: TextStyle(
-                                  color: Colors.blueAccent,
-                                  fontSize: 20,
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () =>
-                                  {
-                                    updated.value = false
-                                  }
-                            ),
-                          ]
-                      ),),
-                      content: Obx(() {
-                        if(updated.value){
-                          return Row(
-                            children: [
-                              Container(width: 100, child: Text("新的歌单名称")),
-                              Container(
-                                width: 200,
-                                child: TextField(
-                                  controller: _updateController,
-                                ),
-                              ),
+    try {
+      if (res.subsonicResponse?.status == "ok") {
+              serviceController.server_playLists_info_list.value.clear();
+              res.subsonicResponse!.playlists!.playlist!.forEach((element) {
+                serviceController.server_playLists_info_list.value.add(element);
+                SplayLists_Widget.add(ListTile(
+                  leading: Icon(LineIcons.clipboardList,color: Get.isDarkMode?dark_text_Colors:light_text_Colors,),
+                  title: Text(element.name!,style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors),),
+                  subtitle: Text(element.songCount.toString() + "首",style: TextStyle(color:  Get.isDarkMode?dark_sub_text_Colors:light_sub_text_Colors)),
+                  onTap: () async {
+                    playListByMusicLogic.playlistID.value =element.id!;
+                    playListByMusicLogic.is_deleted.value=true;
+                    List<DataRow> data = await playListByMusicLogic.buildplayListView(
+                        element.id!);
+                    if (data.length == 0) {
+                      serviceController.showWidget.value =
+                          Container(child: Text("没有数据"));
+                      return;
+                    }
+                    serviceController.showWidget.value =
+                        Container(child: PlayListByMusicPage(data));
+                    update(["right_widget"]);
+                    serviceController.titleNmae.value = "收藏-${element.name}";
+                  },
+                  onLongPress: () {
+                    _updateController.text = (element.name!);
+                    var updated = true.obs;
+                    showDialog(
+                        context: Get.context!,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: RichText(text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: "修改",
+                                      style: TextStyle(
+                                        color: Colors.blueAccent,
+                                        fontSize: 20,
+
+                                      ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () =>
+                                        {
+                                          updated.value = true
+                                        }
+                                  ),
+                                  TextSpan(
+                                    text: "/",
+                                    style: TextStyle(
+                                      color:Get.isDarkMode?dark_text_Colors:light_text_Colors,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                      text: "删除",
+                                      style: TextStyle(
+                                        color: Colors.blueAccent,
+                                        fontSize: 20,
+                                      ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () =>
+                                        {
+                                          updated.value = false
+                                        }
+                                  ),
+                                ]
+                            ),),
+                            content: Obx(() {
+                              if(updated.value){
+                                return Row(
+                                  children: [
+                                    Container(width: 100, child: Text("新的歌单名称",style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors))),
+                                    Container(
+                                      width: 200,
+                                      child: TextField(
+                                        controller: _updateController,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }else{
+                                return Container(
+                                    width: 200,
+                                    child: Text("确定删除该歌单?",style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors)),
+                                );
+                              }
+                            }),
+                            actions: <Widget>[
+                              GFButton(child: Text('取消',style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors)), onPressed: () {
+                                  Get.back();
+                              },),
+                              GFButton(child: Text('确认',style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors)), onPressed: () {
+                                if(updated.value){
+                                SubsonicApi.updatePlaylistRequest(element.id!,_updateController.text!).then((value) => {
+                                  getPlayLists()
+                                });
+                                }else{
+                                  SubsonicApi.deletePlaylistRequest(element.id!).then((value) => {
+                                    getPlayLists()
+                                  });
+                                }
+                                Get.back();
+                              },),
                             ],
                           );
-                        }else{
-                          return Container(
-                              width: 200,
-                              child: Text("确定删除该歌单?"),
-                          );
-                        }
-                      }),
-                      actions: <Widget>[
-                        GFButton(child: Text('取消'), onPressed: () {
-                            Get.back();
-                        },),
-                        GFButton(child: Text('确认'), onPressed: () {
-                          if(updated.value){
-                          SubsonicApi.updatePlaylistRequest(element.id!,_updateController.text!).then((value) => {
-                            getPlayLists()
-                          });
-                          }else{
-                            SubsonicApi.deletePlaylistRequest(element.id!).then((value) => {
-                              getPlayLists()
-                            });
-                          }
-                          Get.back();
-                        },),
-                      ],
-                    );
-                  });
-            },
-          ));
-        });
-        SplayLists_Widget.insert(SplayLists_Widget.length,
-            IconButton(onPressed: () {
-              var dialogTextField = DialogTextField(
-                  validator: (value) {
-                    print('$value');
-                    if (value!.isEmpty) {
-                      return "歌单名称不能为空";
-                    } else {
-                      SubsonicApi.createPlaylistRequest(value).then((value) =>
-                      {
-                        getPlayLists()
-                      });
-                    }
+                        });
+                  },
+                ));
+              });
+
+              // SplayLists
+            }
+    } catch (e) {
+      print(e);
+    } finally {
+      SplayLists_Widget.insert(SplayLists_Widget.length,
+          IconButton(onPressed: () {
+            var dialogTextField = DialogTextField(
+                validator: (value) {
+                  print('$value');
+                  if (value!.isEmpty) {
+                    return "歌单名称不能为空";
+                  } else {
+                    SubsonicApi.createPlaylistRequest(value).then((value) =>
+                    {
+                      getPlayLists()
+                    });
                   }
+                }
 
-              );
+            );
+            showTextInputDialog(title: "添加歌单",
+                message: "请输入歌单名称",
+                okLabel: "确定",
+                cancelLabel: "取消",
+                autoSubmit: true,
+                style: AdaptiveStyle.material,
+                useRootNavigator: true,
+                // canPop: true,
+                barrierDismissible: true,
+                context: Get.context!,
+                textFields: [dialogTextField]);
+          }, icon: Icon(Icons.add, color: Get.isDarkMode?dark_text_Colors:light_text_Colors))
+      );
+      update(["play_list_view"]);
 
-              showTextInputDialog(title: "添加歌单",
-                  message: "请输入歌单名称",
-                  okLabel: "确定",
-                  cancelLabel: "取消",
-                  autoSubmit: true,
-                  style: AdaptiveStyle.material,
-                  useRootNavigator: true,
-                  // canPop: true,
-                  barrierDismissible: true,
-                  context: Get.context!,
-                  textFields: [dialogTextField]);
-            }, icon: Icon(Icons.add))
-        );
-        update(["play_list_view"]);
-        // SplayLists
-      }
-    });
+    }
+
+
   }
 }

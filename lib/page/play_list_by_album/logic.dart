@@ -5,6 +5,7 @@ import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:hive/hive.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:sq_subsonic_desktop/color/SqThemeData.dart';
 import 'package:sq_subsonic_desktop/page/controller/ServiceController.dart';
 import 'package:sq_subsonic_desktop/page/play_list_by_music/logic.dart';
 import 'package:sq_subsonic_desktop/page/play_list_by_music/view.dart';
@@ -54,8 +55,8 @@ class PlayListByAlbumLogic extends GetxController {
         var imageurl =
             await SubsonicApi.getCoverArtRequestToImageUrl(element.id);
         playLists.add(GFListTile(
-          titleText: element.name,
-          subTitleText: '共有 ${element.songCount} 首',
+          title: Text(element.name,style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors),),
+          subTitle: Text('共有 ${element.songCount} 首',style: TextStyle(color:  Get.isDarkMode?dark_sub_text_Colors:light_sub_text_Colors),) ,
           avatar: imageurl.isEmpty
               ? GFAvatar(
                   child: Text(element.name[0]), shape: GFAvatarShape.standard)
@@ -97,7 +98,7 @@ class PlayListByAlbumLogic extends GetxController {
                   },
                   icon: Icon(
                     LineIcons.angleRight,
-                    color: Colors.black,
+                    color: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                     size: 25,
                   )),
             ],
@@ -107,8 +108,8 @@ class PlayListByAlbumLogic extends GetxController {
     } else {
       data.forEach((element) {
         playLists.add(GFListTile(
-          titleText: element.name,
-          subTitleText: '共有 ${element.songCount} 首',
+          title: Text(element.name,style: TextStyle(color:Get.isDarkMode?dark_text_Colors:light_text_Colors),),
+          subTitle: Text('共有 ${element.songCount} 首',style: TextStyle(color:Get.isDarkMode?dark_sub_text_Colors:light_sub_text_Colors),),
           onTap: () {
             serviceController.titleNmae.value = "专辑：${element.name}";
             playListByMusicLogic.turn_page.value = false;
@@ -136,7 +137,7 @@ class PlayListByAlbumLogic extends GetxController {
                   },
                   icon: Icon(
                     LineIcons.angleRight,
-                    color: Colors.black,
+                    color: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                     size: 25,
                   )),
             ],
