@@ -79,9 +79,8 @@ class ServiceController extends GetxController {
             }
           else
             {openAutoPlay.value = false},
-
+      themeName.value =  box.get("system_theme",defaultValue: "light"),
       loginName.value = box.get("service_username",defaultValue: "SQ"),
-
 
         if(box.get("open_artist_to_music",defaultValue: "false")=="true"){
         openArtistToMusic.value = true
