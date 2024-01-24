@@ -13,6 +13,7 @@
 #include <screen_retriever/screen_retriever_plugin.h>
 #include <tray_manager/tray_manager_plugin.h>
 #include <window_manager/window_manager_plugin.h>
+#include <windows_single_instance/windows_single_instance_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   AudioplayersWindowsPluginRegisterWithRegistrar(
@@ -29,4 +30,6 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("TrayManagerPlugin"));
   WindowManagerPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("WindowManagerPlugin"));
+  WindowsSingleInstancePluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("WindowsSingleInstancePlugin"));
 }

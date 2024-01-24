@@ -66,7 +66,7 @@ class _PlayPageState extends State<PlayPage> {
                           hotKeyManager.unregister(_hotKey);
                           Navigator.of(context).pop();
                         },
-                        icon: Icon(LineIcons.angleDown)),
+                        icon: Icon(LineIcons.angleDown,color: Get.isDarkMode?Colors.white:Colors.black,)),
                   ],
                 ),
                 Expanded(

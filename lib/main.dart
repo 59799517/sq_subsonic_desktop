@@ -28,14 +28,25 @@ import 'package:sq_subsonic_desktop/page/widget/BlockButtonWidget.dart';
 import 'package:sq_subsonic_desktop/utils/DurationUtils.dart';
 import 'package:path/path.dart' as p;
 import 'package:window_manager/window_manager.dart';
-import 'color/ColrosUtils.dart';
 import 'color/SqThemeData.dart';
+import 'package:windows_single_instance/windows_single_instance.dart';
 
-void main() async {
+
+void main(List<String> args) async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await WindowsSingleInstance.ensureSingleInstance(
+      args,
+      "sq_subsonic_desktop",
+      onSecondWindow: (args) {
+        print(args);
+      });
+
   var path = Directory.current.path;
   var context = p.Context();
 
-  WidgetsFlutterBinding.ensureInitialized();
+
   var join = context.join(path, "config");
   await Hive.initFlutter(join);
   Hive.registerAdapter(ColorAdapter());
