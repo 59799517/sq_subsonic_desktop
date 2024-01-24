@@ -329,6 +329,8 @@ class ServiceController extends GetxController {
       musicImageUrl.value = nowMusic.coverArt!;
       musicAlubm.value = nowMusic.album!;
       musicArtist.value = nowMusic.artist!;
+      musicDuration.value = nowMusic.duration!.toDouble();
+
       Hive.openBox("play_list_star_song").then((box) => {
         if (box.get(nowMusic.id!) != null) {isStar.value = true}else{
           isStar.value = false
@@ -347,6 +349,8 @@ class ServiceController extends GetxController {
         musicImageUrl.value = nowMusic.coverArt!;
         musicAlubm.value = nowMusic.album!;
         musicArtist.value = nowMusic.artist!;
+        musicDuration.value = nowMusic.duration!.toDouble();
+
         Hive.openBox("play_list_star_song").then((box) => {
           if (box.get(nowMusic.id!) != null) {isStar.value = true}else{
             isStar.value = false
@@ -365,6 +369,8 @@ class ServiceController extends GetxController {
         musicImageUrl.value = nowMusic.coverArt!;
         musicAlubm.value = nowMusic.album!;
         musicArtist.value = nowMusic.artist!;
+        musicDuration.value = nowMusic.duration!.toDouble();
+
         Hive.openBox("play_list_star_song").then((box) => {
           if (box.get(nowMusic.id!) != null) {isStar.value = true}else{
             isStar.value = false
@@ -423,6 +429,8 @@ class ServiceController extends GetxController {
       musicImageUrl.value = nowMusic.coverArt!;
       musicAlubm.value = nowMusic.album!;
       musicArtist.value = nowMusic.artist!;
+      musicDuration.value = nowMusic.duration!.toDouble();
+
       Hive.openBox("play_list_star_song").then((box) => {
         if (box.get(nowMusic.id!) != null) {isStar.value = true}else{
           isStar.value = false
@@ -446,6 +454,8 @@ class ServiceController extends GetxController {
         musicImageUrl.value = nowMusic.coverArt!;
         musicAlubm.value = nowMusic.album!;
         musicArtist.value = nowMusic.artist!;
+        musicDuration.value = nowMusic.duration!.toDouble();
+
         Hive.openBox("play_list_star_song").then((box) => {
           if (box.get(nowMusic.id!) != null) {isStar.value = true}else{
             isStar.value = false
