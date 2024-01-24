@@ -80,51 +80,59 @@ class _PlayPageState extends State<PlayPage> {
                               children: [
                                 Expanded(
                                     flex: 10,
-                                    child: Image.network(
-                                        serviceController.musicImageUrl.value)),
+                                    child: Container(
+                                      alignment: Alignment(0,0),
+                                      margin: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                                      child: Image.network(
+                                          serviceController.musicImageUrl.value),
+                                    )),
                                 // Expanded(
                                 //   flex: 1,
                                 //   child: Container(),
                                 // ),
                                 Expanded(
                                     flex: 6,
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          child: Text(
-                                            '名称：${serviceController.musicName
-                                                .value}',
-                                            style: TextStyle(
-                                                color: Get.isDarkMode? dark_text_Colors : light_text_Colors,
-                                                fontSize: 20,
-                                                decoration: TextDecoration
-                                                    .none),
+                                    child: Container(
+                                      // alignment: Alignment(-1,0),
+                                      // margin: EdgeInsets.fromLTRB(100, 0, 0, 0),
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            child: Text(
+                                              '名称：${serviceController.musicName
+                                                  .value}',
+                                              style: TextStyle(
+                                                  color:Get.isDarkMode? dark_sub_text_Colors : light_sub_text_Colors,
+                                                  fontSize: 20,
+                                                  decoration: TextDecoration
+                                                      .none),
+                                            ),
                                           ),
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.all(20),
-                                          child: Text(
-                                            '歌手：${serviceController
-                                                .musicArtist.value}',
-                                            style: TextStyle(
-                                                color: Get.isDarkMode? dark_text_Colors : light_text_Colors,
-                                                fontSize: 20,
-                                                decoration: TextDecoration
-                                                    .none),
+                                          Container(
+                                            padding: EdgeInsets.all(20),
+                                            child: Text(
+                                              '歌手：${serviceController
+                                                  .musicArtist.value}',
+                                              style: TextStyle(
+                                                  color: Get.isDarkMode? dark_sub_text_Colors : light_sub_text_Colors,
+                                                  fontSize: 20,
+                                                  decoration: TextDecoration
+                                                      .none),
+                                            ),
                                           ),
-                                        ),
-                                        Container(
-                                          child: Text(
-                                            '专辑：${serviceController.musicAlubm
-                                                .value}',
-                                            style: TextStyle(
-                                                color: Get.isDarkMode? dark_text_Colors : light_text_Colors,
-                                                fontSize: 20,
-                                                decoration: TextDecoration
-                                                    .none),
-                                          ),
-                                        )
-                                      ],
+                                          Container(
+                                            child: Text(
+                                              '专辑：${serviceController.musicAlubm
+                                                  .value}',
+                                              style: TextStyle(
+                                                  color: Get.isDarkMode? dark_sub_text_Colors : light_sub_text_Colors,
+                                                  fontSize: 20,
+                                                  decoration: TextDecoration
+                                                      .none),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     )),
                                 // Expanded(
                                 //     flex: 1,

@@ -311,6 +311,7 @@ class _RightSide extends State<RightSide> {
                                            GFImageOverlay(
                                             height: 300,
                                             width: 300,
+                                            boxFit: BoxFit.fitWidth,
                                             image: NetworkImage(
                                                 logic.musicImageUrl.value),
                                           );
