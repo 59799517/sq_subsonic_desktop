@@ -224,7 +224,9 @@ class ServiceController extends GetxController {
 
   addPlayListWithIdPlayNow(String id, PlayMusicEntity playMusicEntity) async {
     Hive.openBox("play_list_star_song").then((box) => {
-          if (box.get(id) != null) {isStar.value = true}
+          if (box.get(id) != null) {isStar.value = true}else{
+            isStar.value = false
+          }
         });
     String url = await SubsonicApi.getPlayUrlRequest(id);
     print('${url}');
@@ -316,6 +318,7 @@ class ServiceController extends GetxController {
     if (playlist.length == 0) {
       return;
     }
+
     if (currentPlayIndex.value < playlist.length - 1) {
       currentPlayIndex++;
       PlayMusicEntity nowMusic = playlist[currentPlayIndex.value];
@@ -327,6 +330,11 @@ class ServiceController extends GetxController {
       musicImageUrl.value = nowMusic.coverArt!;
       musicAlubm.value = nowMusic.album!;
       musicArtist.value = nowMusic.artist!;
+      Hive.openBox("play_list_star_song").then((box) => {
+        if (box.get(nowMusic.id!) != null) {isStar.value = true}else{
+          isStar.value = false
+        }
+      });
       updatePlayListSet();
     }else if(currentPlayIndex.value == playlist.length - 1){
       if(loopType.value == LoopType.playList){
@@ -340,6 +348,11 @@ class ServiceController extends GetxController {
         musicImageUrl.value = nowMusic.coverArt!;
         musicAlubm.value = nowMusic.album!;
         musicArtist.value = nowMusic.artist!;
+        Hive.openBox("play_list_star_song").then((box) => {
+          if (box.get(nowMusic.id!) != null) {isStar.value = true}else{
+            isStar.value = false
+          }
+        });
         updatePlayListSet();
       } else if(loopType.value == LoopType.random){
         currentPlayIndex.value = 0;
@@ -353,6 +366,11 @@ class ServiceController extends GetxController {
         musicImageUrl.value = nowMusic.coverArt!;
         musicAlubm.value = nowMusic.album!;
         musicArtist.value = nowMusic.artist!;
+        Hive.openBox("play_list_star_song").then((box) => {
+          if (box.get(nowMusic.id!) != null) {isStar.value = true}else{
+            isStar.value = false
+          }
+        });
         updatePlayListSet();
       }
       update(["musicName_view", "musicImageUrl_view", "lyric_view","play_slider_view"]);
@@ -377,6 +395,11 @@ class ServiceController extends GetxController {
       musicAlubm.value = nowMusic.album!;
       musicArtist.value = nowMusic.artist!;
       musicDuration.value = nowMusic.duration!.toDouble();
+      Hive.openBox("play_list_star_song").then((box) => {
+        if (box.get(nowMusic.id!) != null) {isStar.value = true}else{
+          isStar.value = false
+        }
+      });
       updatePlayListSet();
       update(["musicName_view", "musicImageUrl_view", "lyric_view","play_slider_view"]);
     }
@@ -401,6 +424,11 @@ class ServiceController extends GetxController {
       musicImageUrl.value = nowMusic.coverArt!;
       musicAlubm.value = nowMusic.album!;
       musicArtist.value = nowMusic.artist!;
+      Hive.openBox("play_list_star_song").then((box) => {
+        if (box.get(nowMusic.id!) != null) {isStar.value = true}else{
+          isStar.value = false
+        }
+      });
       updatePlayListSet();
     } else {
       if (loopType.value == LoopType.random ||
@@ -419,6 +447,11 @@ class ServiceController extends GetxController {
         musicImageUrl.value = nowMusic.coverArt!;
         musicAlubm.value = nowMusic.album!;
         musicArtist.value = nowMusic.artist!;
+        Hive.openBox("play_list_star_song").then((box) => {
+          if (box.get(nowMusic.id!) != null) {isStar.value = true}else{
+            isStar.value = false
+          }
+        });
         updatePlayListSet();
       } else {
         showToast(
@@ -452,6 +485,11 @@ class ServiceController extends GetxController {
       musicAlubm.value = nowMusic.album!;
       musicArtist.value = nowMusic.artist!;
       musicDuration.value = nowMusic.duration!.toDouble();
+      Hive.openBox("play_list_star_song").then((box) => {
+        if (box.get(nowMusic.id!) != null) {isStar.value = true}else{
+          isStar.value = false
+        }
+      });
       updatePlayListSet();
       update(["musicName_view", "musicImageUrl_view", "lyric_view","play_slider_view"]);
     }
@@ -472,6 +510,7 @@ class ServiceController extends GetxController {
     } else {
       loopType.value = LoopType.playList;
     }
+
     updatePlayListType();
     print('当前循环模式${loopType.value}');
     update(["music_operation_view"]);
