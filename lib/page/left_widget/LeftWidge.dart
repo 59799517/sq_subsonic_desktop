@@ -141,7 +141,7 @@ class _LeftWidgeState extends State<LeftWidge> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text:'版本号：v1.1.3',
+                          text:'版本号：v1.1.4',
                           style: TextStyle(
                             color:  Get.isDarkMode?dark_text_Colors:light_text_Colors,
                           ),
@@ -151,7 +151,7 @@ class _LeftWidgeState extends State<LeftWidge> {
                 ),
                 onDoubleTap:(){
                   serviceController.titleNmae.value = "插件设置";
-                  serviceController.showWidget.value = Container(child: PlugConfigPage(),height: double.maxFinite,);
+                  serviceController.showWidget.value = Container(child: PlugConfigPage(),width: double.maxFinite,height: double.maxFinite,);
 
 
                 },
