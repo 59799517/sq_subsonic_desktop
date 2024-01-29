@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:sq_subsonic_desktop/page/controller/ServiceController.dart';
 import 'package:sq_subsonic_desktop/page/left_widget/LeftController.dart';
 import 'package:sq_subsonic_desktop/page/play_list_by_album/logic.dart';
@@ -29,19 +30,36 @@ class _SqSearchBarState extends State<SqSearchBar> {
 
   @override
   Widget build(BuildContext context) {
+
+
+
     return TypeAheadField<ExampleItem>(
       // emptyBuilder: (context){
       //   // return Null();
       // } ,
-      suggestionsCallback: (search) {
+      suggestionsCallback: (search) async{
         if(search==null||search==""){
           return [];
         }
-        return [
-          ExampleItem(title: "$search", type: "单曲"),
-          ExampleItem(title: "$search", type: "歌手"),
-          ExampleItem(title: "$search", type: "专辑")
-        ];
+        if(serviceController.plug_open.value){
+          var box = await Hive.openBox("plug_type");
+          var map = box.toMap();
+          List<ExampleItem> addex = [];
+          addex.add(ExampleItem(title: "$search", type: "单曲",plugvalue: ""));
+          addex.add(ExampleItem(title: "$search", type: "歌手",plugvalue: ""));
+          addex.add(ExampleItem(title: "$search", type: "专辑",plugvalue: ""));
+          map.forEach((key, value) {
+            addex.add(ExampleItem(title: "$search", type: "插件:${key}",plugvalue: value));
+          });
+          return addex;
+        }else{
+          return [
+            ExampleItem(title: "$search", type: "单曲",plugvalue: ""),
+            ExampleItem(title: "$search", type: "歌手",plugvalue: ""),
+            ExampleItem(title: "$search", type: "专辑",plugvalue: "")
+          ];
+        }
+
       },
       builder: (context, controller, focusNode) {
         return Container(
@@ -109,6 +127,14 @@ class _SqSearchBarState extends State<SqSearchBar> {
             child: PlayListByAlbumPage(search,PlayListByAlbumPageType.search),
           );
           leftController.update(["right_widget"]);
+        }else{
+          if( item.type.contains("插件")||item.plugvalue!=''){
+            serviceController.searKey.value = item.title;
+            musiclogic.turn_page.value = true;
+            var search = await musiclogic.searchplug(type: item.plugvalue);
+            serviceController.showWidget.value = Container(child: PlayListByMusicPage(search));
+          }
+
         }
         print(item.title);
         print(item.type);
@@ -119,8 +145,10 @@ class _SqSearchBarState extends State<SqSearchBar> {
 class ExampleItem {
   final String title;
   final String type;
+  final String plugvalue;
   ExampleItem({
     required this.title,
     required this.type,
+     required this.plugvalue,
   });
 }

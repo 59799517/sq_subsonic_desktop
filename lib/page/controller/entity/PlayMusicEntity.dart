@@ -26,6 +26,8 @@ class PlayMusicEntity {
   bool? isVideo;
   String? url;
   String? lyric;
+  // plug为插件空为系统
+  String? sourType;
 
 
   PlayMusicEntity(
@@ -55,6 +57,7 @@ class PlayMusicEntity {
         this.isVideo,
         this.url,
         this.lyric,
+        this.sourType,
       });
 
   PlayMusicEntity.fromJson(Map<String, dynamic> json) {
@@ -84,6 +87,7 @@ class PlayMusicEntity {
     isVideo = json['isVideo'];
     url = json['url'];
     lyric = json['lyric'];
+    sourType = json['sourType'];
   }
 
   Map<String, dynamic> toJson() {
@@ -114,6 +118,7 @@ class PlayMusicEntity {
     data['isVideo'] = this.isVideo;
     data['url'] = this.url;
     data['lyric'] = this.lyric;
+    data['sourType'] = this.sourType;
     return data;
   }
 }

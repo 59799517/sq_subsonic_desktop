@@ -55,8 +55,8 @@ class DioManager  {
 
 
   /// get请求
-  static Future get({@required String? url, Map<String, dynamic>? params}) async {
-    return await requestHttp(url!, method: DioMethod.get, params: params);
+  static Future get({@required String? url, Map<String, dynamic>? params,Map<String, dynamic>? headers}) async {
+    return await requestHttp(url!, method: DioMethod.get, params: params,headers:headers);
   }
 
   /// post 请求
@@ -94,7 +94,7 @@ class DioManager  {
   }
 
 
-  static Future requestHttp(String url, {DioMethod method = DioMethod.get, Map<String, dynamic>? params }) async {
+  static Future requestHttp(String url, {DioMethod method = DioMethod.get, Map<String, dynamic>? params,Map<String, dynamic>? headers}) async {
     const methodValues = {
       DioMethod.get: 'get',
       DioMethod.post: 'post',
@@ -113,10 +113,10 @@ class DioManager  {
       // 注意: 只有 post 方法支持发送 FormData.
       switch (method) {
         case DioMethod.get:
-          response = await dio.request(url, queryParameters: params, options: Options(method: methodValues[method]));
+          response = await dio.request(url, queryParameters: params, options: Options(method: methodValues[method],headers:headers));
           break;
         default:
-          response = await dio.request(url, data: params, options: Options(method: methodValues[method]));
+          response = await dio.request(url, data: params, options: Options(method: methodValues[method],headers:headers));
       }
 
       // JSON 序列化, Response<dynamic> 转 Map<String, dynamic>

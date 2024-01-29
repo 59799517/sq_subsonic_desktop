@@ -27,10 +27,20 @@ class _PlayListByMusicPageState extends State<PlayListByMusicPage> {
 
   loadView() async {
     index++;
-    var playlist  =  await  musiclogic.search(index: index);
-    setState(() {
-      widget.lists.addAll(playlist);
-    });
+
+    if(musiclogic.is_plug_search.value){
+      var playlist  =  await  musiclogic.searchplug(index: index,type:  musiclogic.plug_search_value.value);
+      setState(() {
+        widget.lists.addAll(playlist);
+      });
+
+    }else{
+      var playlist  =  await  musiclogic.search(index: index);
+      setState(() {
+        widget.lists.addAll(playlist);
+      });
+
+    }
   }
 
 
@@ -71,6 +81,7 @@ class _PlayListByMusicPageState extends State<PlayListByMusicPage> {
               label: Row(
                 children: [
                   Text("操作",style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
+                  musiclogic.is_plug_search.value?Container():
                   GFButton(shape: GFButtonShape.pills,
                     // splashColor: Colors.blueAccent,
                     borderShape: const RoundedRectangleBorder(
@@ -81,7 +92,6 @@ class _PlayListByMusicPageState extends State<PlayListByMusicPage> {
                     ),
                     // type: GFButtonType.outline,
                     type: GFButtonType.outline,
-
                     // blockButton: true,
                     // highlightColor:Colors.orange,
                     color: Colors.transparent,

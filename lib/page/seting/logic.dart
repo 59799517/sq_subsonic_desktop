@@ -27,6 +27,9 @@ class SetingLogic extends GetxController {
   var server_info_username = "".obs;
   var server_info_password = "".obs;
 
+
+
+
   var sercer_check_status= false.obs;
 
   //开启全局快捷键
@@ -234,9 +237,12 @@ class SetingLogic extends GetxController {
       box.put("show_song_image", "false"),
       //主题
       box.put("system_theme", "light"),
-
       //当前登录用户名称
-      box.put("service_username", "SQ")
+      box.put("service_username", "SQ"),
+      box.put("plug_open", "false"),
+      box.put("plug_url", "http://127.0.0.1:8900"),
+      box.put("plug_username", "admin"),
+      box.put("plug_password", "admin"),
     });
 
     Hive.openBox('server_info').then((value) => {
@@ -444,6 +450,15 @@ class SetingLogic extends GetxController {
    getServiceInfo() async{
     var box = await Hive.openBox("server_info");
     return box.toMap();
+  }
+  savePlugInfo(String ip,String username,String password) async {
+    var box = await Hive.openBox("set_server_config");
+    box.put("plug_open", "false");
+    box.put("plug_url",ip);
+    box.put("plug_username", username);
+    box.put("plug_password", password);
+
+
   }
 
 

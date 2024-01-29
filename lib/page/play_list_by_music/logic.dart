@@ -15,8 +15,10 @@ import 'package:sq_subsonic_desktop/page/play_list_by_music/widget/SqIconButton.
 import 'package:sq_subsonic_desktop/subsonic/models/MusicDirectoryByAlubmResult.dart';
 import 'package:sq_subsonic_desktop/subsonic/models/MusicDirectoryResult.dart';
 import 'package:sq_subsonic_desktop/subsonic/models/PlayListResult.dart';
+import 'package:sq_subsonic_desktop/subsonic/models/PlugSearchResult.dart';
 import 'package:sq_subsonic_desktop/subsonic/models/RandomSongsResult.dart';
 import 'package:sq_subsonic_desktop/subsonic/models/SqSearchResult2.dart';
+import 'package:sq_subsonic_desktop/utils/PlugApi.dart';
 import 'package:sq_subsonic_desktop/utils/SubsonicApi.dart';
 
 import '../../color/SqThemeData.dart';
@@ -28,6 +30,8 @@ class PlayListByMusicLogic extends GetxController {
   final turn_page = false.obs;
   final is_deleted = false.obs;
   final playlistID = ''.obs;
+  final is_plug_search = false.obs;
+  final plug_search_value ="kw".obs;
 
   var   playViewData = [];
 
@@ -40,6 +44,8 @@ class PlayListByMusicLogic extends GetxController {
 
   Future<List<DataRow>> buildStarListView() async {
     is_deleted.value = false;
+    is_plug_search.value = false;
+
     var res = await SubsonicApi.starRequest();
     playViewData =res.subsonicResponse!.starred!.song!;
     return excute( res.subsonicResponse!.starred!.song!);
@@ -47,6 +53,7 @@ class PlayListByMusicLogic extends GetxController {
 
   Future<List<DataRow>> getMusicListByAlubmId(String id) async {
     is_deleted.value = false;
+    is_plug_search.value = false;
 
     MusicDirectoryResult res = await SubsonicApi.getMusicDirectoryRequest(id);
     playViewData =res.subsonicResponse!.directory!.child!;
@@ -55,6 +62,8 @@ class PlayListByMusicLogic extends GetxController {
 
   Future<List<DataRow>> getMusicListByArtistId(String id) async {
     is_deleted.value = false;
+    is_plug_search.value = false;
+
 
     MusicDirectoryByAlubmResult res =
     await SubsonicApi.getAlubmDirectoryRequest(id);
@@ -78,6 +87,8 @@ class PlayListByMusicLogic extends GetxController {
 
   Future<List<DataRow>> search({int index = 1}) async {
     is_deleted.value = false;
+    is_plug_search.value = false;
+
     SqSearchResult2 res = await SubsonicApi.search2Request(
         serviceController.searKey.value,
         pageNum: index);
@@ -89,8 +100,153 @@ class PlayListByMusicLogic extends GetxController {
     return excute(res.subsonicResponse!.searchResult2!.song!);
   }
 
+
+  Future<List<DataRow>> searchplug({int index = 1,String type="kw"}) async {
+    plug_search_value.value = type;
+    is_plug_search.value = true;
+    PlugSearchResult res  = await PlugApi.search(
+        serviceController.searKey.value,
+        type:type,
+        pageNum: index);
+    List<DataRow> playLists = [];
+
+    if (serviceController.showSongImage.value) {
+      res.data!.records!.forEach((element) {
+        var dataRow = DataRow(
+            cells: [
+              DataCell(
+                  element.pic!.isEmpty
+                      ? GFAvatar(
+                      child: Text(element.name![0],style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),), shape: GFAvatarShape.standard)
+                      : Image.network(
+                    element.pic!,
+                    errorBuilder: (ctx, err, stackTrace) {
+                      return GFAvatar(
+                          child: Text(element.name![0],style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
+                          shape: GFAvatarShape.standard);
+                    },
+                    width: 70,
+                    height: 70,
+                  )
+              ),
+              DataCell(Text(element.name!,style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors))),
+              DataCell(Text(element.artistName!,style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors))),
+              DataCell(Text(element.albumName!,style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors))),
+              DataCell(Text('Auto',style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors))),
+              DataCell(IconButton(
+                icon: Icon(
+                  LineIcons.play,
+                  color: Get.isDarkMode?dark_text_Colors:light_text_Colors,
+                  size: 25,
+                ),
+                onPressed: () {
+                  Map<String, dynamic> json = {
+                    "id": element.id,
+                    "parent": "",
+                    "isDir": false,
+                    "title": element.name,
+                    "album": element.albumName,
+                    "artist": element.artistName,
+                    "track": 0,
+                    "year": 0,
+                    "genre": "",
+                    "coverArt": element.pic,
+                    "size": 0,
+                    "contentType": "audio/mpeg",
+                    "suffix": "Auto",
+                    "duration": int.parse(element.duration.toString()),
+                    "bitRate": 0,
+                    "path": "",
+                    "playCount": 0,
+                    "played": "",
+                    "discNumber": 0,
+                    "created": "",
+                    "albumId": "",
+                    "artistId": "",
+                    "type": "song",
+                    "isVideo": false,
+                    "lyric": "",
+                    "sourType":plug_search_value.value
+
+                  };
+                  var playMusicEntity = PlayMusicEntity.fromJson(json);
+                  serviceController.addPlayListWithIdPlayNow(
+                      element.id!, playMusicEntity);
+                },
+              ))
+            ]
+        );
+        playLists.add(dataRow);
+      });
+    }else{
+      res.data!.records!.forEach((element) {
+        var dataRow = DataRow(
+            cells: [
+              DataCell(Text(element.name!,style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors))),
+              DataCell(Text(element.artistName!,style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors))),
+              DataCell(Text(element.albumName!,style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors))),
+              DataCell(Text('Auto',style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors))),
+              DataCell(IconButton(
+                icon: Icon(
+                  LineIcons.play,
+                  color: Get.isDarkMode?dark_text_Colors:light_text_Colors,
+                  size: 25,
+                ),
+                onPressed: () {
+
+                  Map<String, dynamic> json = {
+                    "id": element.id,
+                    "parent": "",
+                    "isDir": false,
+                    "title": element.name,
+                    "album": element.albumName,
+                    "artist": element.artistName,
+                    "track": 0,
+                    "year": 0,
+                    "genre": "",
+                    "coverArt": element.pic,
+                    "size": 0,
+                    "contentType": "audio/mpeg",
+                    "suffix": "Auto",
+                    "duration": int.parse(element.duration.toString()),
+                    "bitRate": 0,
+                    "path": "",
+                    "playCount": 0,
+                    "played": "",
+                    "discNumber": 0,
+                    "created": "",
+                    "albumId": "",
+                    "artistId": "",
+                    "type": "song",
+                    "isVideo": false,
+                    "lyric": "",
+                    "sourType":plug_search_value.value
+
+                  };
+                  var playMusicEntity = PlayMusicEntity.fromJson(json);
+                  serviceController.addPlayListWithIdPlayNow(
+                      element.id!, playMusicEntity);
+                },
+              ))
+            ]
+        );
+        playLists.add(dataRow);
+      });
+    }
+
+
+
+
+
+
+    return playLists;
+  }
+
+
   Future<List<DataRow>> random() async {
     is_deleted.value = false;
+    is_plug_search.value = false;
+
     RandomSongsResult res = await SubsonicApi.randomSongsRequest();
     playViewData =res.subsonicResponse!.randomSongs!.song!;
 
@@ -174,7 +330,7 @@ class PlayListByMusicLogic extends GetxController {
                   },
                   icon: Icon(
                     LineIcons.angleRight,
-                    color: Colors.black,
+                    color: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                     size: 25,
                   )),
             ],
@@ -182,10 +338,12 @@ class PlayListByMusicLogic extends GetxController {
         ));
       }
     } else {
-      data.forEach((element, index) {
+      for (var i = 0; i < data.length; i++) {
+        var element = data[i];
         playLists.add(GFListTile(
-          titleText: element.name,
-          subTitleText: '共有 ${element.songCount} 首',
+          title:Text(element.name,style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors)),
+          subTitle:Text('共有 ${element.songCount} 首',style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors)) ,
+          // );
           onTap: () {
             serviceController.titleNmae.value = "专辑：${element.name}";
             turn_page.value = false;
@@ -204,6 +362,7 @@ class PlayListByMusicLogic extends GetxController {
                   onPressed: () {
                     serviceController.titleNmae.value = "专辑：${element.name}";
                     turn_page.value = false;
+
                     getMusicListByAlubmId(element.id!).then((value) =>
                     {
                       serviceController.showWidget.value =
@@ -212,13 +371,14 @@ class PlayListByMusicLogic extends GetxController {
                   },
                   icon: Icon(
                     LineIcons.angleRight,
-                    color: Colors.black,
+                    color: Get.isDarkMode?dark_text_Colors:light_text_Colors,
                     size: 25,
                   )),
             ],
           ),
         ));
-      });
+      }
+
     }
     return playLists;
   }
@@ -254,6 +414,7 @@ class PlayListByMusicLogic extends GetxController {
           DataCell(Text(element.title!,style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors))),
           DataCell(RichText(
             text: TextSpan(
+
                 text: element.artist!,
                 style: TextStyle(
                   color: Colors.blueAccent,

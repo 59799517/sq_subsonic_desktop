@@ -8,6 +8,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:sq_subsonic_desktop/color/ColrosUtils.dart';
 import 'package:sq_subsonic_desktop/color/SqThemeData.dart';
 import 'package:sq_subsonic_desktop/page/controller/ServiceController.dart';
+import 'package:sq_subsonic_desktop/page/plug_config/view.dart';
 
 import '../right_widget/RightWidget.dart';
 import 'LeftController.dart';
@@ -133,12 +134,29 @@ class _LeftWidgeState extends State<LeftWidge> {
                     }),
               ),
             ),
-            // Expanded(
-            //   flex: 1,
-            //   child: Card(
-            //     child: Text("333333333333333"),
-            //   ),
-            // )
+            Expanded(
+              flex: 1,
+              child: GestureDetector(
+                child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text:'版本号：v1.1.2',
+                          style: TextStyle(
+                            color:  Get.isDarkMode?dark_text_Colors:light_text_Colors,
+                          ),
+                        ),
+                      ],
+                    ),
+                ),
+                onDoubleTap:(){
+                  serviceController.titleNmae.value = "插件设置";
+                  serviceController.showWidget.value = Container(child: PlugConfigPage(),height: double.maxFinite,);
+
+
+                },
+              ),
+            )
           ],
         ));
   }
