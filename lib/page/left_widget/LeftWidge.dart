@@ -152,8 +152,6 @@ class _LeftWidgeState extends State<LeftWidge> {
                 onDoubleTap:(){
                   serviceController.titleNmae.value = "插件设置";
                   serviceController.showWidget.value = Container(child: PlugConfigPage(),width: double.maxFinite,height: double.maxFinite,);
-
-
                 },
               ),
             )
