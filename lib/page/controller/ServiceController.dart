@@ -236,7 +236,6 @@ class ServiceController extends GetxController {
   }
 
   addPlayListWithIdPlayNow(String id, PlayMusicEntity playMusicEntity) async {
-
     if(playMusicEntity.sourType != null|| playMusicEntity.sourType == ""){
           if(playMusicEntity.sourType==""){
             playMusicEntity.sourType = "kw";
@@ -247,8 +246,8 @@ class ServiceController extends GetxController {
           playMusicEntity.lyric = getsongInfoById["musicLyric"];
           var box = await Hive.openBox("playlist_nowPlaying");
           box.put(id, playMusicEntity.toJson());
-          playlist.add(playMusicEntity);
-          currentPlayIndex.value = playlist.length - 1;
+          playlist.insert(currentPlayIndex.value+1, playMusicEntity);
+          currentPlayIndex.value = currentPlayIndex.value+1;
           updatePlayListSet();
           await player.play(UrlSource(source));
           musicID.value = playMusicEntity.id!;
@@ -276,8 +275,8 @@ class ServiceController extends GetxController {
 
       var box = await Hive.openBox("playlist_nowPlaying");
       box.put(id, playMusicEntity.toJson());
-      playlist.add(playMusicEntity);
-      currentPlayIndex.value = playlist.length - 1;
+      playlist.insert(currentPlayIndex.value+1, playMusicEntity);
+      currentPlayIndex.value = currentPlayIndex.value+1;
       updatePlayListSet();
       await player.play(UrlSource(url));
       musicID.value = playMusicEntity.id!;
