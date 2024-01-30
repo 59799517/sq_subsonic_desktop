@@ -200,7 +200,7 @@ class ServiceController extends GetxController {
     currentPlayIndex.value = 0;
     for (var element in data) {
       PlayMusicEntity da = PlayMusicEntity.fromJson(element.toJson());
-      String url = await SubsonicApi.getPlayUrlRequest(da.id!);
+      String url = await SubsonicApi.getPlayUrlRequest(da.id!,mediaType: da.suffix!);
       print('${url}');
       da.url = url;
       LyricsResult lyricsResult = await SubsonicApi.lyricsRRequest(
@@ -224,7 +224,7 @@ class ServiceController extends GetxController {
   }
 
   addPlayListWithId(String id, PlayMusicEntity playMusicEntity) async {
-    String url = await SubsonicApi.getPlayUrlRequest(id);
+    String url = await SubsonicApi.getPlayUrlRequest(id,mediaType: playMusicEntity.suffix!);
     print('${url}');
     playMusicEntity.url = url;
     LyricsResult lyricsResult = await SubsonicApi.lyricsRRequest(
@@ -265,7 +265,7 @@ class ServiceController extends GetxController {
           isStar.value = false
         }
       });
-      String url = await SubsonicApi.getPlayUrlRequest(id);
+      String url = await SubsonicApi.getPlayUrlRequest(id,mediaType: playMusicEntity.suffix!);
       print('${url}');
       playMusicEntity.url = url;
       LyricsResult lyricsResult = await SubsonicApi.lyricsRRequest(

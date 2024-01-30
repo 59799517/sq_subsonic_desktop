@@ -90,7 +90,7 @@ packages:
     source: hosted
     version: "4.1.0"
   audioplayers_windows:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: audioplayers_windows
       sha256: "9536812c9103563644ada2ef45ae523806b0745f7a78e89d1b5fb1951de90e1a"

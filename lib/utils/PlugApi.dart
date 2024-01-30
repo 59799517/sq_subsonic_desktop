@@ -88,7 +88,7 @@ class PlugApi {
       return PlugSearchResult();
     }
   }
-  static Future getMusicPlayUrl(String id,{String type = "kw",}) async{
+  static Future getMusicPlayUrl(String id,{String type = "kw"}) async{
     String url = await getPlugBaseUrl();
     var plugToken =await getPlugToken();
     url = url+musicUrl+"/"+type+"/"+id;

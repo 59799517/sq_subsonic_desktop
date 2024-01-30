@@ -219,9 +219,12 @@ class SubsonicApi {
     return url+getCoverArt+"?id=${id}&size=${size}&"+map.entries.map((e) => "${e.key}=${e.value}").join("&");
   }
 
-  static  Future<String>  getPlayUrlRequest(String id) async {
+  static  Future<String>  getPlayUrlRequest(String id,{String mediaType = "flac"}) async {
     String url = await getBaseUrl();
     Map<String, dynamic> map = await getBaseRequestInfo();
+    if(mediaType=="wma"){
+    return url+stream+"?id=${id}&format=mp3&"+map.entries.map((e) => "${e.key}=${e.value}").join("&");
+    }
     return url+stream+"?id=${id}&"+map.entries.map((e) => "${e.key}=${e.value}").join("&");
   }
   static Future<LyricsResult> lyricsRRequest(String title,String artist) async {
