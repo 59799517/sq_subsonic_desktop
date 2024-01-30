@@ -14,6 +14,7 @@ class PlugApi {
   static String searchMusic = "/searchMusic";
   static String musicUrl = "/musicUrl";
   static String songInfoById = "/SongInfoById";
+  static String musicDownload = "/musicDownload";
 
 
 
@@ -110,6 +111,17 @@ class PlugApi {
       return {};
     }
   }
+  static Future<bool > musicDownloadById(String id,{String type = "kw",}) async{
 
+    String url = await getPlugBaseUrl();
+    var plugToken =await getPlugToken();
+    url = url+musicDownload;
+    Map<String, dynamic> result = await DioManager.post(url: url, headers: {"sqmusic": plugToken}, params: {"id": id, "plugType": type});
+    if (result["code"]==200) {
+      return true;
+    }else{
+      return false;
+    }
+  }
 
 }

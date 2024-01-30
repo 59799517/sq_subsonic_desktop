@@ -60,8 +60,8 @@ class DioManager  {
   }
 
   /// post 请求
-  static Future post({@required String? url, Map<String, dynamic>? params}) async {
-    return await requestHttp(url!, method: DioMethod.post, params: params);
+  static Future post({@required String? url, Map<String, dynamic>? params,Map<String, dynamic>? headers}) async {
+    return await requestHttp(url!, method: DioMethod.post, params: params,headers:headers);
   }
 
   /// put 请求
