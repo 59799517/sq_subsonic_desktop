@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -70,12 +71,14 @@ class PlayListByArtistLogic extends GetxController {
               avatar: imageurl.isEmpty?GFAvatar(
                   child: Text(element.name[0],style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors)),
                   shape: GFAvatarShape.standard
-              ): Image.network(imageurl,errorBuilder: (ctx,err,stackTrace){
-                return GFAvatar(
-                    child: Text(element.name[0],style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors),),
-                    shape: GFAvatarShape.standard
-                );
-              },width: 70, height: 70,),
+              ): CachedNetworkImage(
+                imageUrl: imageurl,
+                placeholder: (context, url) => CircularProgressIndicator(),
+                width: 70,
+                height: 70,
+                fit: BoxFit.cover,
+                errorWidget: (context, url, error) => Text(element.name[0],style: TextStyle(color: Get.isDarkMode?dark_text_Colors:light_text_Colors)),
+              ),
               icon: Row(
                 children: [
                   SqStarIconButton(element.id!,box.get(element.id)!=null?true:false,callBack: (){

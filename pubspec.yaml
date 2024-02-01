@@ -69,6 +69,8 @@ dependencies:
   window_manager: ^0.3.7
   adaptive_dialog: ^2.0.0
   windows_single_instance: ^1.0.1
+  cached_network_image: ^3.3.1
+
 
 
 

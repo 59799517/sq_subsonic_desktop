@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
@@ -195,15 +196,30 @@ class PlayListByMusicLogic extends GetxController {
               ),
               IconButton(
                   onPressed: () {
-                    PlugApi.musicDownloadById(element.id!,type: type).then((value) => {
-                      if(value){
-                        Get.snackbar("下载提示", "下载成功", duration: Duration(seconds: 1),snackPosition: SnackPosition.BOTTOM,backgroundColor: Get.isDarkMode?dark_background_Colors:light_background_Colors,colorText: Get.isDarkMode?dark_text_Colors:light_text_Colors)
-                      }else
-                      {
-                        Get.snackbar("下载提示", "下载失败", duration: Duration(seconds: 1),snackPosition: SnackPosition.BOTTOM,backgroundColor: Get.isDarkMode?dark_background_Colors:light_background_Colors)
-
-                      }
-                    });
+                    PlugApi.musicDownloadById(element.id!, type: type)
+                        .then((value) => {
+                              if (value)
+                                {
+                                  Get.snackbar("下载提示", "下载成功",
+                                      duration: Duration(seconds: 1),
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: Get.isDarkMode
+                                          ? dark_background_Colors
+                                          : light_background_Colors,
+                                      colorText: Get.isDarkMode
+                                          ? dark_text_Colors
+                                          : light_text_Colors)
+                                }
+                              else
+                                {
+                                  Get.snackbar("下载提示", "下载失败",
+                                      duration: Duration(seconds: 1),
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: Get.isDarkMode
+                                          ? dark_background_Colors
+                                          : light_background_Colors)
+                                }
+                            });
                   },
                   icon: Icon(
                     LineIcons.plane,
@@ -460,21 +476,19 @@ class PlayListByMusicLogic extends GetxController {
                               : light_text_Colors),
                     ),
                     shape: GFAvatarShape.standard)
-                : Image.network(
-                    imageurl,
-                    errorBuilder: (ctx, err, stackTrace) {
-                      return GFAvatar(
-                          child: Text(
-                            element.title[0],
-                            style: TextStyle(
-                                color: Get.isDarkMode
-                                    ? dark_text_Colors
-                                    : light_text_Colors),
-                          ),
-                          shape: GFAvatarShape.standard);
-                    },
+                : CachedNetworkImage(
+                    imageUrl: imageurl,
+                    placeholder: (context, url) => CircularProgressIndicator(),
                     width: 70,
                     height: 70,
+                    fit: BoxFit.cover,
+                    errorWidget: (context, url, error) => Text(
+                      element.title[0],
+                      style: TextStyle(
+                          color: Get.isDarkMode
+                              ? dark_text_Colors
+                              : light_text_Colors),
+                    ),
                   ),
           ),
           DataCell(Text(element.title!,

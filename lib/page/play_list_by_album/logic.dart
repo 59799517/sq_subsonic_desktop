@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
@@ -55,22 +56,29 @@ class PlayListByAlbumLogic extends GetxController {
         var imageurl =
             await SubsonicApi.getCoverArtRequestToImageUrl(element.id);
         playLists.add(GFListTile(
-          title: Text(element.name,style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors),),
-          subTitle: Text('共有 ${element.songCount} 首',style: TextStyle(color:  Get.isDarkMode?dark_sub_text_Colors:light_sub_text_Colors),) ,
+          title: Text(
+            element.name,
+            style: TextStyle(
+                color: Get.isDarkMode ? dark_text_Colors : light_text_Colors),
+          ),
+          subTitle: Text(
+            '共有 ${element.songCount} 首',
+            style: TextStyle(
+                color: Get.isDarkMode
+                    ? dark_sub_text_Colors
+                    : light_sub_text_Colors),
+          ),
           avatar: imageurl.isEmpty
               ? GFAvatar(
                   child: Text(element.name[0]), shape: GFAvatarShape.standard)
-              : Image.network(
-                  imageurl,
-                  errorBuilder: (ctx, err, stackTrace) {
-                    return GFAvatar(
-                        child: Text(element.name[0]),
-                        shape: GFAvatarShape.standard);
-                  },
+              : CachedNetworkImage(
+                  imageUrl: imageurl,
+                  placeholder: (context, url) => CircularProgressIndicator(),
                   width: 70,
                   height: 70,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) => Text(element.name[0]),
                 ),
-          // );
           onTap: () {
             serviceController.titleNmae.value = "专辑：${element.name}";
             playListByMusicLogic.turn_page.value = false;
@@ -98,7 +106,8 @@ class PlayListByAlbumLogic extends GetxController {
                   },
                   icon: Icon(
                     LineIcons.angleRight,
-                    color: Get.isDarkMode?dark_text_Colors:light_text_Colors,
+                    color:
+                        Get.isDarkMode ? dark_text_Colors : light_text_Colors,
                     size: 25,
                   )),
             ],
@@ -108,8 +117,18 @@ class PlayListByAlbumLogic extends GetxController {
     } else {
       data.forEach((element) {
         playLists.add(GFListTile(
-          title: Text(element.name,style: TextStyle(color:Get.isDarkMode?dark_text_Colors:light_text_Colors),),
-          subTitle: Text('共有 ${element.songCount} 首',style: TextStyle(color:Get.isDarkMode?dark_sub_text_Colors:light_sub_text_Colors),),
+          title: Text(
+            element.name,
+            style: TextStyle(
+                color: Get.isDarkMode ? dark_text_Colors : light_text_Colors),
+          ),
+          subTitle: Text(
+            '共有 ${element.songCount} 首',
+            style: TextStyle(
+                color: Get.isDarkMode
+                    ? dark_sub_text_Colors
+                    : light_sub_text_Colors),
+          ),
           onTap: () {
             serviceController.titleNmae.value = "专辑：${element.name}";
             playListByMusicLogic.turn_page.value = false;
@@ -137,7 +156,8 @@ class PlayListByAlbumLogic extends GetxController {
                   },
                   icon: Icon(
                     LineIcons.angleRight,
-                    color: Get.isDarkMode?dark_text_Colors:light_text_Colors,
+                    color:
+                        Get.isDarkMode ? dark_text_Colors : light_text_Colors,
                     size: 25,
                   )),
             ],

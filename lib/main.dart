@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:blur/blur.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -319,13 +320,22 @@ class _RightSide extends State<RightSide> {
                                       builder: (logic) {
                                         try {
                                           return (logic.musicImageUrl.value.isEmpty)?Image.asset("assets/image/response.png"):
-                                           GFImageOverlay(
-                                            height: 300,
+                                          CachedNetworkImage(imageUrl: logic.musicImageUrl.value,
+                                            placeholder: (context, url) => CircularProgressIndicator(),
                                             width: 300,
-                                            boxFit: BoxFit.fitWidth,
-                                            image: NetworkImage(
-                                                logic.musicImageUrl.value),
+                                            height: 300,
+                                            fit: BoxFit.cover,
+                                            errorWidget: (context, url, error) => Image.asset("assets/image/response.png"),
                                           );
+                                          //  GFImageOverlay(
+                                          //   height: 300,
+                                          //   width: 300,
+                                          //   boxFit: BoxFit.fitWidth,
+                                          //   image:
+                                          //   //
+                                          //   // NetworkImage(
+                                          //   //     logic.musicImageUrl.value),
+                                          // );
                                         } catch (e) {
                                           return Container();
                                         }

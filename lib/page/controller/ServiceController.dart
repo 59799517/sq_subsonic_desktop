@@ -82,6 +82,9 @@ class ServiceController extends GetxController {
   @override
   void onInit() {
     player = AudioPlayer();
+
+    var tempDir = player.audioCache.getTempDir();
+    print('tempDir: ${tempDir}');
     Hive.openBox('set_server_config').then((box) => {
           if (box.get("open_auto_play", defaultValue: "false") == "true")
             {
@@ -180,7 +183,7 @@ class ServiceController extends GetxController {
                               else
                                 {
                                   player
-                                      .play(UrlSource(
+                                      .setSource(UrlSource(
                                           playlist[currentPlayIndex.value].url))
                                       .then((value) => {player.pause()})
                                 }

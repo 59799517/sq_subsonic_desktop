@@ -1,4 +1,5 @@
 import 'package:blur/blur.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
@@ -83,8 +84,11 @@ class _PlayPageState extends State<PlayPage> {
                                     child: Container(
                                       alignment: Alignment(0,0),
                                       margin: EdgeInsets.fromLTRB(30, 0, 0, 0),
-                                      child: Image.network(
-                                          serviceController.musicImageUrl.value),
+                                      child:
+                                      CachedNetworkImage(imageUrl: serviceController.musicImageUrl.value,
+                                        placeholder: (context, url) => CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) => Image.asset("assets/image/response.png"),
+                                      )
                                     )),
                                 // Expanded(
                                 //   flex: 1,
@@ -214,11 +218,14 @@ class _PlayPageState extends State<PlayPage> {
               ],
             ),
             child: Container(
-                child: Image.network(
-                  serviceController.musicImageUrl.value,
+                child:
+                CachedNetworkImage(imageUrl: serviceController.musicImageUrl.value,
                   fit: BoxFit.cover,
                   width: double.maxFinite,
                   height: double.maxFinite,
-                ))));
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Image.asset("assets/image/response.png"),
+                )
+            )));
   }
 }
