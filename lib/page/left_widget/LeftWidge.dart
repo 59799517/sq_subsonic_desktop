@@ -141,7 +141,7 @@ class _LeftWidgeState extends State<LeftWidge> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text:'版本号：v1.1.8',
+                          text:'版本号：v1.1.9',
                           style: TextStyle(
                             color:  Get.isDarkMode?dark_text_Colors:light_text_Colors,
                           ),

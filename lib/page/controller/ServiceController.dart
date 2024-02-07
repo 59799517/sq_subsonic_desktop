@@ -249,8 +249,13 @@ class ServiceController extends GetxController {
           playMusicEntity.lyric = getsongInfoById["musicLyric"];
           var box = await Hive.openBox("playlist_nowPlaying");
           box.put(id, playMusicEntity.toJson());
-          playlist.insert(currentPlayIndex.value+1, playMusicEntity);
-          currentPlayIndex.value = currentPlayIndex.value+1;
+          if(playlist.length==0){
+            playlist.add(playMusicEntity);
+            currentPlayIndex.value = 0;
+          }else{
+            playlist.insert(currentPlayIndex.value+1, playMusicEntity);
+            currentPlayIndex.value = currentPlayIndex.value+1;
+          }
           updatePlayListSet();
           await player.play(UrlSource(source));
           musicID.value = playMusicEntity.id!;
@@ -278,8 +283,14 @@ class ServiceController extends GetxController {
 
       var box = await Hive.openBox("playlist_nowPlaying");
       box.put(id, playMusicEntity.toJson());
-      playlist.insert(currentPlayIndex.value+1, playMusicEntity);
-      currentPlayIndex.value = currentPlayIndex.value+1;
+
+      if(playlist.length==0){
+        playlist.add(playMusicEntity);
+        currentPlayIndex.value = 0;
+      }else{
+        playlist.insert(currentPlayIndex.value+1, playMusicEntity);
+        currentPlayIndex.value = currentPlayIndex.value+1;
+      }
       updatePlayListSet();
       await player.play(UrlSource(url));
       musicID.value = playMusicEntity.id!;
@@ -296,8 +307,6 @@ class ServiceController extends GetxController {
 
   jumpMusic(int playListIndex) async {
     PlayMusicEntity music = playlist[playListIndex];
-
-
 
       Hive.openBox("play_list_star_song").then((box) => {
         if (box.get(music.id) != null) {isStar.value = true}
