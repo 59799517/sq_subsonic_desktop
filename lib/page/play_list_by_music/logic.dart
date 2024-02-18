@@ -561,6 +561,7 @@ class PlayListByMusicLogic extends GetxController {
                       SubsonicApi.deletePlaylistSongRequest(playlistID.value, i)
                           .then((value) => {logic.getPlayLists()});
                     } else {
+                      service_Playlist.clear();
                       var data =
                           serviceController.server_playLists_info_list.value;
                       data.forEach((value) {
