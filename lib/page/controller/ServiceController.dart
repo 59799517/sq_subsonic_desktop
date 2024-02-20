@@ -9,33 +9,36 @@ import 'package:sq_subsonic_desktop/utils/PlugApi.dart';
 import 'package:sq_subsonic_desktop/utils/SubsonicApi.dart';
 import 'dart:convert' as json;
 
-
-
 import 'entity/PlayMusicEntity.dart';
 
 class ServiceController extends GetxController {
-
-
-
   //右侧显示的内容
   Rx<Widget> showWidget = Container().obs;
 
   //右侧标题
   RxString titleNmae = "Sq".obs;
+
 //给钱名称
   var musicName = "".obs;
+
 //图片url
   var musicImageUrl = "".obs;
+
 //专辑
   var musicAlubm = "".obs;
+
 //歌手
   var musicArtist = "".obs;
+
 //总时长
   var musicDuration = 0.0.obs;
+
 //id
   var musicID = "".obs;
+
 //歌词
   var musicLyric = "".obs;
+
 //是否标记星
   var isStar = false.obs; //
   //循环模式
@@ -49,22 +52,24 @@ class ServiceController extends GetxController {
 
   //播放下标
   late var currentPlayIndex = 0.obs;
+
   //设置自动播放标识
   late var openAutoPlay = false.obs;
 
   // 搜索关键字
   final searKey = "".obs;
+
   //显示图片
- var showAlbumImage =false.obs;
-  var showArtistImage =false.obs;
-  var showSongImage =false.obs;
+  var showAlbumImage = false.obs;
+  var showArtistImage = false.obs;
+  var showSongImage = false.obs;
   var themeName = "light".obs;
+
   //直接打开歌曲跳过专辑
   var openArtistToMusic = false.obs;
   var loginName = "".obs;
 
-  var server_playLists_info_list  = [].obs;
-
+  var server_playLists_info_list = [].obs;
 
   //插件
   var plug_open = false.obs;
@@ -73,8 +78,6 @@ class ServiceController extends GetxController {
   var plug_url = "".obs;
   var plug_username = "".obs;
   var plug_password = "".obs;
-
-
 
   //播放列表对应的参数信息
   late List currentSource;
@@ -93,32 +96,30 @@ class ServiceController extends GetxController {
             }
           else
             {openAutoPlay.value = false},
-      themeName.value =  box.get("system_theme",defaultValue: "light"),
-      loginName.value = box.get("service_username",defaultValue: "SQ"),
-      plug_open.value = bool.parse(box.get("plug_open",defaultValue: "false")),
-      plug_url.value = box.get("plug_url",defaultValue: "http://127.0.0.1:8080"),
-      plug_username.value = box.get("plug_username",defaultValue: "admin"),
-      plug_password.value = box.get("plug_password",defaultValue: "admin"),
-        if(box.get("open_artist_to_music",defaultValue: "false")=="true"){
-        openArtistToMusic.value = true
-      }else{openArtistToMusic.value = false},
-
-      if(box.get("show_album_image", defaultValue: "false") == "true"){
-        showAlbumImage.value = true
-      }else{
-        showAlbumImage.value = false
-      },
-      if(box.get("show_artist_image", defaultValue: "false") == "true"){
-        showArtistImage.value = true
-      }else{
-        showArtistImage.value = false
-      },
-      if(box.get("show_song_image", defaultValue: "false") == "true"){
-        showSongImage.value = true
-      }else{
-        showSongImage.value = false
-      },
-
+          themeName.value = box.get("system_theme", defaultValue: "light"),
+          loginName.value = box.get("service_username", defaultValue: "SQ"),
+          plug_open.value =
+              bool.parse(box.get("plug_open", defaultValue: "false")),
+          plug_url.value =
+              box.get("plug_url", defaultValue: "http://127.0.0.1:8080"),
+          plug_username.value = box.get("plug_username", defaultValue: "admin"),
+          plug_password.value = box.get("plug_password", defaultValue: "admin"),
+          if (box.get("open_artist_to_music", defaultValue: "false") == "true")
+            {openArtistToMusic.value = true}
+          else
+            {openArtistToMusic.value = false},
+          if (box.get("show_album_image", defaultValue: "false") == "true")
+            {showAlbumImage.value = true}
+          else
+            {showAlbumImage.value = false},
+          if (box.get("show_artist_image", defaultValue: "false") == "true")
+            {showArtistImage.value = true}
+          else
+            {showArtistImage.value = false},
+          if (box.get("show_song_image", defaultValue: "false") == "true")
+            {showSongImage.value = true}
+          else
+            {showSongImage.value = false},
           Hive.openBox("playlist_nowPlaying_seting").then((value) => {
                 if (value.get("volume") == null)
                   {player.setVolume(1)}
@@ -136,10 +137,8 @@ class ServiceController extends GetxController {
                 else if (value.get("playListType", defaultValue: "playList") ==
                     "none")
                   {loopType.value = LoopType.playList},
-
-          update(["volume_view","music_operation_view"])
-
-          }),
+                update(["volume_view", "music_operation_view"])
+              }),
           Hive.openBox("playlist_nowPlaying").then((box2) => {
                 box2.toMap().forEach((key, e) {
                   Map<String, dynamic> map = {};
@@ -198,19 +197,19 @@ class ServiceController extends GetxController {
     super.onInit();
   }
 
-  addPlayListData( List data) async {
+  addPlayListData(List data) async {
     playlist.value.clear();
     currentPlayIndex.value = 0;
     for (var element in data) {
       PlayMusicEntity da = PlayMusicEntity.fromJson(element.toJson());
-      String url = await SubsonicApi.getPlayUrlRequest(da.id!,mediaType: da.suffix!);
+      String url =
+          await SubsonicApi.getPlayUrlRequest(da.id!, mediaType: da.suffix!);
       print('${url}');
       da.url = url;
-      LyricsResult lyricsResult = await SubsonicApi.lyricsRRequest(
-          da.title!, da.artist!);
+      LyricsResult lyricsResult =
+          await SubsonicApi.lyricsRRequest(da.title!, da.artist!);
       da.lyric = lyricsResult.subsonicResponse!.lyrics!.value;
-      da.coverArt =
-          await SubsonicApi.getCoverArtRequestToImageUrl(da.id!);
+      da.coverArt = await SubsonicApi.getCoverArtRequestToImageUrl(da.id!);
       playlist.add(da);
     }
     PlayMusicEntity playMusicEntity = playlist.value[0];
@@ -218,16 +217,17 @@ class ServiceController extends GetxController {
     musicID.value = playMusicEntity.id!;
     musicLyric.value = playMusicEntity.lyric!;
     musicName.value = playMusicEntity.title!;
-    musicImageUrl.value = await SubsonicApi.getCoverArtRequestToImageUrl(playMusicEntity.id!);
+    musicImageUrl.value =
+        await SubsonicApi.getCoverArtRequestToImageUrl(playMusicEntity.id!);
     musicAlubm.value = playMusicEntity.album!;
     musicArtist.value = playMusicEntity.artist!;
     musicDuration.value = playMusicEntity.duration!.toDouble();
-    update(["musicName_view", "musicImageUrl_view"]);
-
+    update(["musicName_view", "musicImageUrl_view", "play_page_musicinfo"]);
   }
 
   addPlayListWithId(String id, PlayMusicEntity playMusicEntity) async {
-    String url = await SubsonicApi.getPlayUrlRequest(id,mediaType: playMusicEntity.suffix!);
+    String url = await SubsonicApi.getPlayUrlRequest(id,
+        mediaType: playMusicEntity.suffix!);
     print('${url}');
     playMusicEntity.url = url;
     LyricsResult lyricsResult = await SubsonicApi.lyricsRRequest(
@@ -239,57 +239,61 @@ class ServiceController extends GetxController {
   }
 
   addPlayListWithIdPlayNow(String id, PlayMusicEntity playMusicEntity) async {
-    if(playMusicEntity.sourType != null|| playMusicEntity.sourType == ""){
-          if(playMusicEntity.sourType==""){
-            playMusicEntity.sourType = "kw";
-          }
-        var source = await PlugApi.getMusicPlayUrl(id,type:playMusicEntity.sourType!);
-          playMusicEntity.url = source;
-        var getsongInfoById   =  await PlugApi.getsongInfoById(id,type:playMusicEntity.sourType!);
-          playMusicEntity.lyric = getsongInfoById["musicLyric"];
-          var box = await Hive.openBox("playlist_nowPlaying");
-          box.put(id, playMusicEntity.toJson());
-          if(playlist.length==0){
-            playlist.add(playMusicEntity);
-            currentPlayIndex.value = 0;
-          }else{
-            playlist.insert(currentPlayIndex.value+1, playMusicEntity);
-            currentPlayIndex.value = currentPlayIndex.value+1;
-          }
-          updatePlayListSet();
-          await player.play(UrlSource(source));
-          musicID.value = playMusicEntity.id!;
-          musicLyric.value = playMusicEntity.lyric!;
-          musicName.value = playMusicEntity.title!;
-          musicImageUrl.value = playMusicEntity.coverArt!;
-          musicAlubm.value = playMusicEntity.album!;
-          musicArtist.value = playMusicEntity.artist!;
-          musicDuration.value = playMusicEntity.duration!.toDouble();
-          update(["musicName_view", "musicImageUrl_view"]);
-    }else{
+    if (playMusicEntity.sourType != null || playMusicEntity.sourType == "") {
+      if (playMusicEntity.sourType == "") {
+        playMusicEntity.sourType = "kw";
+      }
+      var source =
+          await PlugApi.getMusicPlayUrl(id, type: playMusicEntity.sourType!);
+      playMusicEntity.url = source;
+      var getsongInfoById =
+          await PlugApi.getsongInfoById(id, type: playMusicEntity.sourType!);
+      playMusicEntity.lyric = getsongInfoById["musicLyric"];
+      var box = await Hive.openBox("playlist_nowPlaying");
+      box.put(id, playMusicEntity.toJson());
+      if (playlist.length == 0) {
+        playlist.add(playMusicEntity);
+        currentPlayIndex.value = 0;
+      } else {
+        playlist.insert(currentPlayIndex.value + 1, playMusicEntity);
+        currentPlayIndex.value = currentPlayIndex.value + 1;
+      }
+      updatePlayListSet();
+      await player.play(UrlSource(source));
+      musicID.value = playMusicEntity.id!;
+      musicLyric.value = playMusicEntity.lyric!;
+      musicName.value = playMusicEntity.title!;
+      musicImageUrl.value = playMusicEntity.coverArt!;
+      musicAlubm.value = playMusicEntity.album!;
+      musicArtist.value = playMusicEntity.artist!;
+      musicDuration.value = playMusicEntity.duration!.toDouble();
+      update(["musicName_view", "musicImageUrl_view", "play_page_musicinfo"]);
+    } else {
       Hive.openBox("play_list_star_song").then((box) => {
-        if (box.get(id) != null) {isStar.value = true}else{
-          isStar.value = false
-        }
-      });
-      String url = await SubsonicApi.getPlayUrlRequest(id,mediaType: playMusicEntity.suffix!);
+            if (box.get(id) != null)
+              {isStar.value = true}
+            else
+              {isStar.value = false}
+          });
+      String url = await SubsonicApi.getPlayUrlRequest(id,
+          mediaType: playMusicEntity.suffix!);
       print('${url}');
       playMusicEntity.url = url;
       LyricsResult lyricsResult = await SubsonicApi.lyricsRRequest(
           playMusicEntity.title!, playMusicEntity.artist!);
       playMusicEntity.lyric = lyricsResult.subsonicResponse!.lyrics!.value;
       playMusicEntity.coverArt =
-      await SubsonicApi.getCoverArtRequestToImageUrl(id);
+          await SubsonicApi.getCoverArtRequestToImageUrl(id);
 
       var box = await Hive.openBox("playlist_nowPlaying");
       box.put(id, playMusicEntity.toJson());
 
-      if(playlist.length==0){
+      if (playlist.length == 0) {
         playlist.add(playMusicEntity);
         currentPlayIndex.value = 0;
-      }else{
-        playlist.insert(currentPlayIndex.value+1, playMusicEntity);
-        currentPlayIndex.value = currentPlayIndex.value+1;
+      } else {
+        playlist.insert(currentPlayIndex.value + 1, playMusicEntity);
+        currentPlayIndex.value = currentPlayIndex.value + 1;
       }
       updatePlayListSet();
       await player.play(UrlSource(url));
@@ -300,30 +304,28 @@ class ServiceController extends GetxController {
       musicAlubm.value = playMusicEntity.album!;
       musicArtist.value = playMusicEntity.artist!;
       musicDuration.value = playMusicEntity.duration!.toDouble();
-      update(["musicName_view", "musicImageUrl_view"]);
+      update(["musicName_view", "musicImageUrl_view", "play_page_musicinfo"]);
     }
-
   }
 
   jumpMusic(int playListIndex) async {
     PlayMusicEntity music = playlist[playListIndex];
 
-      Hive.openBox("play_list_star_song").then((box) => {
-        if (box.get(music.id) != null) {isStar.value = true}
-      });
-      currentPlayIndex.value = playListIndex;
-      updatePlayListSet();
-      await player.play(UrlSource(music.url!));
-      musicID.value = music.id!;
-      musicLyric.value = music.lyric!;
-      musicName.value = music.title!;
-      musicImageUrl.value = music.coverArt!;
-      musicAlubm.value = music.album!;
-      musicArtist.value = music.artist!;
-      musicDuration.value = music.duration!.toDouble();
-      update(["musicName_view", "musicImageUrl_view"]);
-    }
-
+    Hive.openBox("play_list_star_song").then((box) => {
+          if (box.get(music.id) != null) {isStar.value = true}
+        });
+    currentPlayIndex.value = playListIndex;
+    updatePlayListSet();
+    await player.play(UrlSource(music.url!));
+    musicID.value = music.id!;
+    musicLyric.value = music.lyric!;
+    musicName.value = music.title!;
+    musicImageUrl.value = music.coverArt!;
+    musicAlubm.value = music.album!;
+    musicArtist.value = music.artist!;
+    musicDuration.value = music.duration!.toDouble();
+    update(["musicName_view", "musicImageUrl_view", "play_page_musicinfo"]);
+  }
 
   seek(int value) {
     player.seek(Duration(seconds: value.toInt()));
@@ -352,10 +354,24 @@ class ServiceController extends GetxController {
 
   resume() {
     player.resume();
+    update([
+      "musicName_view",
+      "musicImageUrl_view",
+      "lyric_view",
+      "play_slider_view",
+      "play_page_musicinfo"
+    ]);
   }
 
   pause() {
     player.pause();
+    update([
+      "musicName_view",
+      "musicImageUrl_view",
+      "lyric_view",
+      "play_slider_view",
+      "play_page_musicinfo"
+    ]);
   }
 
   setvolume(double value) {
@@ -366,6 +382,7 @@ class ServiceController extends GetxController {
 
   getvolume() {
     return player.volume;
+
   }
 
   nextSilent() {
@@ -387,13 +404,14 @@ class ServiceController extends GetxController {
       musicDuration.value = nowMusic.duration!.toDouble();
 
       Hive.openBox("play_list_star_song").then((box) => {
-        if (box.get(nowMusic.id!) != null) {isStar.value = true}else{
-          isStar.value = false
-        }
-      });
+            if (box.get(nowMusic.id!) != null)
+              {isStar.value = true}
+            else
+              {isStar.value = false}
+          });
       updatePlayListSet();
-    }else if(currentPlayIndex.value == playlist.length - 1){
-      if(loopType.value == LoopType.playList){
+    } else if (currentPlayIndex.value == playlist.length - 1) {
+      if (loopType.value == LoopType.playList) {
         currentPlayIndex.value = 0;
         PlayMusicEntity nowMusic = playlist[currentPlayIndex.value];
         String url = nowMusic.url!;
@@ -407,12 +425,13 @@ class ServiceController extends GetxController {
         musicDuration.value = nowMusic.duration!.toDouble();
 
         Hive.openBox("play_list_star_song").then((box) => {
-          if (box.get(nowMusic.id!) != null) {isStar.value = true}else{
-            isStar.value = false
-          }
-        });
+              if (box.get(nowMusic.id!) != null)
+                {isStar.value = true}
+              else
+                {isStar.value = false}
+            });
         updatePlayListSet();
-      } else if(loopType.value == LoopType.random){
+      } else if (loopType.value == LoopType.random) {
         currentPlayIndex.value = 0;
         playlist.shuffle();
         PlayMusicEntity nowMusic = playlist.value[currentPlayIndex.value];
@@ -427,15 +446,20 @@ class ServiceController extends GetxController {
         musicDuration.value = nowMusic.duration!.toDouble();
 
         Hive.openBox("play_list_star_song").then((box) => {
-          if (box.get(nowMusic.id!) != null) {isStar.value = true}else{
-            isStar.value = false
-          }
-        });
+              if (box.get(nowMusic.id!) != null)
+                {isStar.value = true}
+              else
+                {isStar.value = false}
+            });
         updatePlayListSet();
       }
-      update(["musicName_view", "musicImageUrl_view", "lyric_view","play_slider_view"]);
-
-
+      update([
+        "musicName_view",
+        "musicImageUrl_view",
+        "lyric_view",
+        "play_slider_view",
+        "play_page_musicinfo"
+      ]);
     }
   }
 
@@ -456,12 +480,19 @@ class ServiceController extends GetxController {
       musicArtist.value = nowMusic.artist!;
       musicDuration.value = nowMusic.duration!.toDouble();
       Hive.openBox("play_list_star_song").then((box) => {
-        if (box.get(nowMusic.id!) != null) {isStar.value = true}else{
-          isStar.value = false
-        }
-      });
+            if (box.get(nowMusic.id!) != null)
+              {isStar.value = true}
+            else
+              {isStar.value = false}
+          });
       updatePlayListSet();
-      update(["musicName_view", "musicImageUrl_view", "lyric_view","play_slider_view"]);
+      update([
+        "musicName_view",
+        "musicImageUrl_view",
+        "lyric_view",
+        "play_slider_view",
+        "play_page_musicinfo"
+      ]);
     }
   }
 
@@ -487,17 +518,18 @@ class ServiceController extends GetxController {
       musicDuration.value = nowMusic.duration!.toDouble();
 
       Hive.openBox("play_list_star_song").then((box) => {
-        if (box.get(nowMusic.id!) != null) {isStar.value = true}else{
-          isStar.value = false
-        }
-      });
+            if (box.get(nowMusic.id!) != null)
+              {isStar.value = true}
+            else
+              {isStar.value = false}
+          });
       updatePlayListSet();
     } else {
       if (loopType.value == LoopType.random ||
           loopType.value == LoopType.playList ||
           loopType.value == LoopType.single) {
         currentPlayIndex.value = 0;
-        if(loopType.value == LoopType.random){
+        if (loopType.value == LoopType.random) {
           playlist.shuffle();
         }
         PlayMusicEntity nowMusic = playlist[currentPlayIndex.value];
@@ -512,10 +544,11 @@ class ServiceController extends GetxController {
         musicDuration.value = nowMusic.duration!.toDouble();
 
         Hive.openBox("play_list_star_song").then((box) => {
-          if (box.get(nowMusic.id!) != null) {isStar.value = true}else{
-            isStar.value = false
-          }
-        });
+              if (box.get(nowMusic.id!) != null)
+                {isStar.value = true}
+              else
+                {isStar.value = false}
+            });
         updatePlayListSet();
       } else {
         showToast(
@@ -525,8 +558,13 @@ class ServiceController extends GetxController {
         );
       }
     }
-    update(["musicName_view", "musicImageUrl_view", "lyric_view","play_slider_view"]);
-
+    update([
+      "musicName_view",
+      "musicImageUrl_view",
+      "lyric_view",
+      "play_slider_view",
+      "play_page_musicinfo"
+    ]);
   }
 
   previous(BuildContext context) async {
@@ -550,12 +588,19 @@ class ServiceController extends GetxController {
       musicArtist.value = nowMusic.artist!;
       musicDuration.value = nowMusic.duration!.toDouble();
       Hive.openBox("play_list_star_song").then((box) => {
-        if (box.get(nowMusic.id!) != null) {isStar.value = true}else{
-          isStar.value = false
-        }
-      });
+            if (box.get(nowMusic.id!) != null)
+              {isStar.value = true}
+            else
+              {isStar.value = false}
+          });
       updatePlayListSet();
-      update(["musicName_view", "musicImageUrl_view", "lyric_view","play_slider_view"]);
+      update([
+        "musicName_view",
+        "musicImageUrl_view",
+        "lyric_view",
+        "play_slider_view",
+        "play_page_musicinfo"
+      ]);
     }
   }
 
@@ -594,6 +639,4 @@ class ServiceController extends GetxController {
     var box = await Hive.openBox("playlist_nowPlaying_seting");
     box.put("playListType", loopType.value.name.toString());
   }
-
-
 }

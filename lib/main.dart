@@ -149,7 +149,7 @@ class _RightSide extends State<RightSide> {
 
   final LayerLink layerLink = LayerLink();
   InteractiveSliderController controller = InteractiveSliderController(0.0);
-  var nowDuration = 0.0;
+  Duration nowDuration = Duration.zero;
   late Widget playbutton = IconButton(
       onPressed: () {
         showToast(
@@ -212,7 +212,7 @@ class _RightSide extends State<RightSide> {
 
     serviceController.player.onPositionChanged.listen((event) {
       setState(() {
-        nowDuration = event.inSeconds.toDouble();
+        nowDuration = event;
       });
     });
     serviceController.player.onPlayerStateChanged.listen((state) {
@@ -276,11 +276,11 @@ class _RightSide extends State<RightSide> {
                                   id: "play_slider_view",
                                   builder: (logic) {
                             return Slider(
-                              value: nowDuration,
+                              value: nowDuration.inSeconds.toDouble(),
                               max: logic.musicDuration.value,
                               onChanged: (value) {
                                 setState(() {
-                                  nowDuration = value;
+                                  nowDuration = new Duration(seconds: value.toInt());
                                 });
                               },
                               onChangeEnd: (value) {
@@ -361,7 +361,7 @@ class _RightSide extends State<RightSide> {
                                         },
                                         pageBuilder: (context, animation,
                                             secondaryAnimation) {
-                                          return PlayPage();
+                                          return PlayPage(nowDuration);
                                         }));
                                   },
                                 ),
@@ -685,7 +685,7 @@ class _RightSide extends State<RightSide> {
                                 children: [
                                   Container(
                                     child: Text(
-                                        "${DurationUtils.formatDurationBySeconds(nowDuration.toInt())}/${DurationUtils.formatDurationBySeconds(serviceController.musicDuration.value.toInt())}",style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors),),
+                                        "${DurationUtils.formatDurationBySeconds(nowDuration.inSeconds.toInt())}/${DurationUtils.formatDurationBySeconds(serviceController.musicDuration.value.toInt())}",style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors),),
                                   ),
                                 ],
                               ))
