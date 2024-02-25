@@ -30,7 +30,7 @@ class ServiceController extends GetxController {
 //歌手
   var musicArtist = "".obs;
 
-//总时长
+//总时长(毫秒)
   var musicDuration = 0.0.obs;
 
 //id
@@ -160,7 +160,7 @@ class ServiceController extends GetxController {
                               musicID.value =
                                   playlist[currentPlayIndex.value].id!,
                               musicLyric.value =
-                                  playlist[currentPlayIndex.value].lyric!,
+                                  playlist[currentPlayIndex.value].lyric==null||playlist[currentPlayIndex.value].lyric==""?"暂无歌词":playlist[currentPlayIndex.value].lyric,
                               musicName.value =
                                   playlist[currentPlayIndex.value].title!,
                               musicImageUrl.value =
@@ -208,8 +208,11 @@ class ServiceController extends GetxController {
       da.url = url;
       LyricsResult lyricsResult =
           await SubsonicApi.lyricsRRequest(da.title!, da.artist!);
-      da.lyric = lyricsResult.subsonicResponse!.lyrics!.value;
+      da.lyric = lyricsResult.subsonicResponse!.lyrics!.value==null||lyricsResult.subsonicResponse!.lyrics!.value==''?"":lyricsResult.subsonicResponse!.lyrics!.value;
       da.coverArt = await SubsonicApi.getCoverArtRequestToImageUrl(da.id!);
+      int tempduration = da.duration!;
+      tempduration = tempduration*1000;
+      da.duration = tempduration;
       playlist.add(da);
     }
     PlayMusicEntity playMusicEntity = playlist.value[0];
@@ -248,7 +251,7 @@ class ServiceController extends GetxController {
       playMusicEntity.url = source;
       var getsongInfoById =
           await PlugApi.getsongInfoById(id, type: playMusicEntity.sourType!);
-      playMusicEntity.lyric = getsongInfoById["musicLyric"];
+      playMusicEntity.lyric = getsongInfoById["musicLyric"]==null||getsongInfoById["musicLyric"]==""?"暂无歌词！":getsongInfoById["musicLyric"];
       var box = await Hive.openBox("playlist_nowPlaying");
       box.put(id, playMusicEntity.toJson());
       if (playlist.length == 0) {
@@ -261,7 +264,11 @@ class ServiceController extends GetxController {
       updatePlayListSet();
       await player.play(UrlSource(source));
       musicID.value = playMusicEntity.id!;
-      musicLyric.value = playMusicEntity.lyric!;
+      try {
+        musicLyric.value = playMusicEntity.lyric!;
+      } catch (e) {
+        musicLyric.value ="暂无歌词";
+      }
       musicName.value = playMusicEntity.title!;
       musicImageUrl.value = playMusicEntity.coverArt!;
       musicAlubm.value = playMusicEntity.album!;
@@ -298,7 +305,7 @@ class ServiceController extends GetxController {
       updatePlayListSet();
       await player.play(UrlSource(url));
       musicID.value = playMusicEntity.id!;
-      musicLyric.value = playMusicEntity.lyric!;
+      musicLyric.value = (playMusicEntity.lyric==null||playMusicEntity.lyric==''?"暂无歌词":playMusicEntity.lyric)!;
       musicName.value = playMusicEntity.title!;
       musicImageUrl.value = await SubsonicApi.getCoverArtRequestToImageUrl(id);
       musicAlubm.value = playMusicEntity.album!;
@@ -318,7 +325,7 @@ class ServiceController extends GetxController {
     updatePlayListSet();
     await player.play(UrlSource(music.url!));
     musicID.value = music.id!;
-    musicLyric.value = music.lyric!;
+    musicLyric.value = (music.lyric==null||music.lyric==''?"暂无歌词":music.lyric)!;
     musicName.value = music.title!;
     musicImageUrl.value = music.coverArt!;
     musicAlubm.value = music.album!;
@@ -328,7 +335,7 @@ class ServiceController extends GetxController {
   }
 
   seek(int value) {
-    player.seek(Duration(seconds: value.toInt()));
+    player.seek(Duration(milliseconds: value.toInt()));
   }
 
   seekDuration(Duration duration) {
@@ -396,7 +403,7 @@ class ServiceController extends GetxController {
       String url = nowMusic.url!;
       player.play(UrlSource(url));
       musicID.value = nowMusic.id!;
-      musicLyric.value = nowMusic.lyric!;
+      musicLyric.value = (nowMusic.lyric==null||nowMusic.lyric==''?"暂无歌词":nowMusic.lyric)!;
       musicName.value = nowMusic.title!;
       musicImageUrl.value = nowMusic.coverArt!;
       musicAlubm.value = nowMusic.album!;
@@ -417,7 +424,7 @@ class ServiceController extends GetxController {
         String url = nowMusic.url!;
         player.play(UrlSource(url));
         musicID.value = nowMusic.id!;
-        musicLyric.value = nowMusic.lyric!;
+        musicLyric.value = (nowMusic.lyric==null||nowMusic.lyric==''?"暂无歌词":nowMusic.lyric)!;
         musicName.value = nowMusic.title!;
         musicImageUrl.value = nowMusic.coverArt!;
         musicAlubm.value = nowMusic.album!;
@@ -438,7 +445,7 @@ class ServiceController extends GetxController {
         String url = nowMusic.url!;
         player.play(UrlSource(url));
         musicID.value = nowMusic.id!;
-        musicLyric.value = nowMusic.lyric!;
+        musicLyric.value = (nowMusic.lyric==null||nowMusic.lyric==''?"暂无歌词":nowMusic.lyric)!;
         musicName.value = nowMusic.title!;
         musicImageUrl.value = nowMusic.coverArt!;
         musicAlubm.value = nowMusic.album!;
@@ -473,7 +480,7 @@ class ServiceController extends GetxController {
       String url = nowMusic.url!;
       player.play(UrlSource(url));
       musicID.value = nowMusic.id!;
-      musicLyric.value = nowMusic.lyric!;
+      musicLyric.value = (nowMusic.lyric==null||nowMusic.lyric==''?"暂无歌词":nowMusic.lyric)!;
       musicName.value = nowMusic.title!;
       musicImageUrl.value = nowMusic.coverArt!;
       musicAlubm.value = nowMusic.album!;
@@ -510,7 +517,7 @@ class ServiceController extends GetxController {
       String url = nowMusic.url!;
       player.play(UrlSource(url));
       musicID.value = nowMusic.id!;
-      musicLyric.value = nowMusic.lyric!;
+      musicLyric.value = (nowMusic.lyric==null||nowMusic.lyric==''?"暂无歌词":nowMusic.lyric)!;
       musicName.value = nowMusic.title!;
       musicImageUrl.value = nowMusic.coverArt!;
       musicAlubm.value = nowMusic.album!;
@@ -536,7 +543,7 @@ class ServiceController extends GetxController {
         String url = nowMusic.url!;
         player.play(UrlSource(url));
         musicID.value = nowMusic.id!;
-        musicLyric.value = nowMusic.lyric!;
+        musicLyric.value = (nowMusic.lyric==null||nowMusic.lyric==''?"暂无歌词":nowMusic.lyric)!;
         musicName.value = nowMusic.title!;
         musicImageUrl.value = nowMusic.coverArt!;
         musicAlubm.value = nowMusic.album!;
@@ -581,7 +588,7 @@ class ServiceController extends GetxController {
       String url = nowMusic.url!;
       player.play(UrlSource(url));
       musicID.value = nowMusic.id!;
-      musicLyric.value = nowMusic.lyric!;
+      musicLyric.value = (nowMusic.lyric==null||nowMusic.lyric==''?"暂无歌词":nowMusic.lyric)!;
       musicName.value = nowMusic.title!;
       musicImageUrl.value = nowMusic.coverArt!;
       musicAlubm.value = nowMusic.album!;

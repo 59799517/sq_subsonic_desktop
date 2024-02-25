@@ -619,6 +619,9 @@ class PlayListByMusicLogic extends GetxController {
                 onPressed: () {
                   var json = element.toJson();
                   var playMusicEntity = PlayMusicEntity.fromJson(json);
+                  int tempduration = playMusicEntity.duration!;
+                  tempduration = tempduration*1000;
+                  playMusicEntity.duration = tempduration;
                   serviceController.addPlayListWithIdPlayNow(
                       element.id!, playMusicEntity);
                 },
@@ -755,6 +758,9 @@ class PlayListByMusicLogic extends GetxController {
                 onPressed: () {
                   var json = element.toJson();
                   var playMusicEntity = PlayMusicEntity.fromJson(json);
+                  int tempduration = playMusicEntity.duration!;
+                  tempduration = tempduration*1000;
+                  playMusicEntity.duration = tempduration;
                   serviceController.addPlayListWithIdPlayNow(
                       element.id!, playMusicEntity);
                 },

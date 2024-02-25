@@ -276,11 +276,11 @@ class _RightSide extends State<RightSide> {
                                   id: "play_slider_view",
                                   builder: (logic) {
                             return Slider(
-                              value: nowDuration.inSeconds.toDouble(),
+                              value: nowDuration.inMilliseconds.toDouble(),
                               max: logic.musicDuration.value,
                               onChanged: (value) {
                                 setState(() {
-                                  nowDuration = new Duration(seconds: value.toInt());
+                                  nowDuration = new Duration(milliseconds: value.toInt());
                                 });
                               },
                               onChangeEnd: (value) {
@@ -685,7 +685,7 @@ class _RightSide extends State<RightSide> {
                                 children: [
                                   Container(
                                     child: Text(
-                                        "${DurationUtils.formatDurationBySeconds(nowDuration.inSeconds.toInt())}/${DurationUtils.formatDurationBySeconds(serviceController.musicDuration.value.toInt())}",style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors),),
+                                        "${DurationUtils.formatDurationByMilliseconds(nowDuration.inMilliseconds.toInt())}/${DurationUtils.formatDurationByMilliseconds(serviceController.musicDuration.value.toInt())}",style: TextStyle(color:  Get.isDarkMode?dark_text_Colors:light_text_Colors),),
                                   ),
                                 ],
                               ))
