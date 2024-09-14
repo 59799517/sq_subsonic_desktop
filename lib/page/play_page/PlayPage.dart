@@ -1,10 +1,15 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:blur/blur.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:mmoo_lyric/lyric.dart';
+import 'package:mmoo_lyric/lyric_controller.dart';
+import 'package:mmoo_lyric/lyric_util.dart';
+import 'package:mmoo_lyric/lyric_widget.dart';
 import 'package:sq_subsonic_desktop/color/SqThemeData.dart';
 import 'package:sq_subsonic_desktop/page/controller/ServiceController.dart';
 import 'package:flutter_lyric/lyrics_reader.dart';
@@ -22,8 +27,9 @@ class PlayPage extends StatefulWidget {
 
 class _PlayPageState extends State<PlayPage> {
   final serviceController = Get.put(ServiceController());
-  var lyricUI = SqLyricUI();
-
+  // var lyricUI = SqLyricUI();
+  var lyricWidget;
+  var lyriccontroller = LyricController(draggingTimerDuration: Duration(milliseconds: 500));
   HotKey _hotKey = HotKey(
     KeyCode.escape,
     // modifiers: [KeyModifier.alt, KeyModifier.control],
@@ -51,8 +57,27 @@ class _PlayPageState extends State<PlayPage> {
     serviceController.player.onPositionChanged.listen((event) {
       setState(() {
         widget.nowDuration = event;
+        lyriccontroller.progress = widget.nowDuration;
       });
     });
+    List<Lyric> formatLyric ;
+    var lyric = Lyric(lyric: "暂无歌词", startTime: Duration(hours: 200),endTime: Duration(hours: 200));
+
+    try {
+      formatLyric= LyricUtil.formatLyric(serviceController.musicLyric.value.isEmpty?'[00:00.00] 暂无歌词！':serviceController.musicLyric.value);
+    } catch (e) {
+    //   var lyric2 = Lyric(lyric: serviceController.musicLyric.value, startTime: Duration(hours: 200),endTime: Duration(hours: 200));
+    // var showlss =  serviceController.musicLyric.value.isEmpty?lyric:lyric2;
+      formatLyric = [lyric];
+    }
+
+     lyricWidget = LyricWidget(
+      size: Size(double.infinity, double.infinity),
+      lyrics: formatLyric,
+      controller: lyriccontroller,
+    );
+
+
   }
 
 
@@ -185,59 +210,61 @@ class _PlayPageState extends State<PlayPage> {
                                 children: [
                                   Expanded(
                                       flex: 1,
-                                      child:
-                                          LyricsReader(
-                                            padding: const EdgeInsets.all(8.0),
-                                            position: widget.nowDuration.inMilliseconds,
-                                            lyricUi: lyricUI,
-                                            model: LyricsModelBuilder.create()
-                                                .bindLyricToMain(
-                                                logic
-                                                    .musicLyric.value)
-                                                .getModel(),
-                                            playing: logic.player.state == PlayerState.playing,
-                                            emptyBuilder: () =>
-                                                Center(
-                                                  child: Text(
-                                                    "暂无歌词",
-                                                    style:
-                                                    lyricUI
-                                                        .getOtherMainTextStyle(),
-                                                  ),
-                                                ),
-                                            selectLineBuilder: (progress,
-                                                confirm) {
-                                              return Row(
-                                                children: [
-                                                  IconButton(
-                                                      onPressed: () {
-                                                        // LyricsLog.logD("点击事件");
-                                                        confirm.call();
-                                                        setState(() {
-                                                          logic
-                                                              .seekDuration(
-                                                              (Duration(
-                                                                  milliseconds:
-                                                                  progress)));
-                                                        });
-                                                      },
-                                                      icon: Icon(
-                                                          Icons.play_arrow,
-                                                          color: Colors
-                                                              .redAccent)),
-                                                  Expanded(
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                          color: Colors
-                                                              .redAccent),
-                                                      height: 1,
-                                                      width: double.infinity,
-                                                    ),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          )
+                                      child:lyricWidget==null?Container(child: Text('暂无歌词')):lyricWidget!,
+
+
+                                          // LyricsReader(
+                                          //   padding: const EdgeInsets.all(8.0),
+                                          //   position: widget.nowDuration.inMilliseconds,
+                                          //   lyricUi: lyricUI,
+                                          //   model: LyricsModelBuilder.create()
+                                          //       .bindLyricToMain(
+                                          //       logic
+                                          //           .musicLyric.value)
+                                          //       .getModel(),
+                                          //   playing: logic.player.state == PlayerState.playing,
+                                          //   emptyBuilder: () =>
+                                          //       Center(
+                                          //         child: Text(
+                                          //           "暂无歌词",
+                                          //           style:
+                                          //           lyricUI
+                                          //               .getOtherMainTextStyle(),
+                                          //         ),
+                                          //       ),
+                                          //   selectLineBuilder: (progress,
+                                          //       confirm) {
+                                          //     return Row(
+                                          //       children: [
+                                          //         IconButton(
+                                          //             onPressed: () {
+                                          //               // LyricsLog.logD("点击事件");
+                                          //               confirm.call();
+                                          //               setState(() {
+                                          //                 logic
+                                          //                     .seekDuration(
+                                          //                     (Duration(
+                                          //                         milliseconds:
+                                          //                         progress)));
+                                          //               });
+                                          //             },
+                                          //             icon: Icon(
+                                          //                 Icons.play_arrow,
+                                          //                 color: Colors
+                                          //                     .redAccent)),
+                                          //         Expanded(
+                                          //           child: Container(
+                                          //             decoration: BoxDecoration(
+                                          //                 color: Colors
+                                          //                     .redAccent),
+                                          //             height: 1,
+                                          //             width: double.infinity,
+                                          //           ),
+                                          //         ),
+                                          //       ],
+                                          //     );
+                                          //   },
+                                          // )
 
                                   ),
                                 ],
@@ -261,5 +288,11 @@ class _PlayPageState extends State<PlayPage> {
                   )
               )));
     });
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty('lyricWidget', lyricWidget));
   }
 }

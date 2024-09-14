@@ -74,8 +74,8 @@ class Records {
   String? pic;
   String? albumName;
   String? albumid;
-  Null? lyric;
-  Null? lyricId;
+  String? lyric;
+  String? lyricId;
   String? searchType;
   String? duration;
   String? oter;

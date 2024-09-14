@@ -13,7 +13,8 @@ final ThemeData appDarkThemeData = ThemeData(
             backgroundColor: dark_background_Colors
         )
     ),
-    backgroundColor: Colors.transparent,
+    // dialogBackgroundColor: Colors.transparent,
+    // backgroundColor: Colors.transparent,
     brightness: Brightness.dark,
     primaryColor: dark_background_Colors, // 主要部分背景颜色（导航和tabBar等）
     scaffoldBackgroundColor:
@@ -34,7 +35,8 @@ final ThemeData appLightThemeData = ThemeData(
           backgroundColor: light_background_Colors
       )
     ),
-    backgroundColor: Colors.transparent,
+    // backgroundColor: Colors.transparent,
+    // dialogBackgroundColor: Colors.transparent,
     brightness: Brightness.light,
     primaryColor: light_background_Colors, // 主要部分背景颜色（导航和tabBar等）
     scaffoldBackgroundColor:
